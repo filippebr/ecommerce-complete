@@ -8,6 +8,20 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(uuid())
-  name String
+  id                   String    @id @default(uuid())
+  firstname            String
+  lastname             String
+  email                String    @unique
+  mobile               String    @unique
+  password             String
+  role                 String    @default("user")
+  isBlocked            Boolean   @default(false)
+  cart                 String? // Need to use JSON.stringify to convert a array to a string for SQLite
+  address              String?
+  refreshToken         String
+  passwordChangeAt     DateTime? @default(now()) @updatedAt
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
 }
