@@ -8,8 +8,8 @@ describe('Testing server', () => {
   test('GET `/` route', async () => {
     await app.ready()
 
-    const response = await supertest(app.server).post('/hello').expect(200)
+    const response = await supertest(app.server).get('/users')
 
-    expect(response.body).toEqual({ hello: 'World' })
+    expect(response.statusCode).toEqual(200)
   })
 })
