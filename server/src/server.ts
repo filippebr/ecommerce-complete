@@ -14,12 +14,10 @@ server.get('/users', async (request, reply) => {
 
 // API RESTful
 
-server
-  .listen({
-    port: 3333,
-  })
-  .then(() => {
-    console.log('HTTP server running on http://localhost:3333')
-  })
+const PORT = 3333
+
+server.listen({ port: PORT }).then(() => {
+  console.log('HTTP server running on http://localhost:3333')
+})
 
 export default server
