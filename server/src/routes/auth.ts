@@ -11,7 +11,25 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post('/users', async (request) => {
     const bodySchema = z.object({
+      firstname: z.string(),
+      lastname: z.string(),
+      mobile: z.string(),
+      password: z.string(),
       email: z.string(),
+    })
+
+    const { firstname, lastname, email, mobile, password } = bodySchema.parse(
+      request.body,
+    )
+
+    const user = await prisma.user.create({
+      data: {
+        firstname,
+        lastname,
+        email,
+        mobile,
+        password,
+      },
     })
   })
 }
