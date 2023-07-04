@@ -31,5 +31,7 @@ export async function authRoutes(app: FastifyInstance) {
         password,
       },
     })
+
+    return user
   })
 }
