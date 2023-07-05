@@ -37,7 +37,7 @@ export async function authRoutes(app: FastifyInstance) {
         },
       })
     } else {
-      reply.status(409).json({ message: 'User already exists' })
+      reply.code(409).send({ message: 'User already exists' })
     }
 
     return user
