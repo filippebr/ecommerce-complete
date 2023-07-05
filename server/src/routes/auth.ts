@@ -9,8 +9,8 @@ export async function authRoutes(app: FastifyInstance) {
     reply.send({ users })
   })
 
-  app.post('/users', async (request) => {
-    const bodySchema = z.object({
+  app.post('/users', async (request, reply) => {
+    const userSchema = z.object({
       firstname: z.string(),
       lastname: z.string(),
       mobile: z.string(),
@@ -18,19 +18,27 @@ export async function authRoutes(app: FastifyInstance) {
       email: z.string(),
     })
 
-    const { firstname, lastname, email, mobile, password } = bodySchema.parse(
-      request.body,
-    )
+    const userInfo = userSchema.parse(request.body)
 
-    const user = await prisma.user.create({
-      data: {
-        firstname,
-        lastname,
-        email,
-        mobile,
-        password,
+    let user = await prisma.user.findUnique({
+      where: {
+        email: userInfo.email,
       },
     })
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          firstname: userInfo.firstname,
+          lastname: userInfo.lastname,
+          mobile: userInfo.mobile,
+          password: userInfo.password,
+          email: userInfo.email,
+        },
+      })
+    } else {
+      reply.status(409).json({ message: 'User already exists' })
+    }
 
     return user
   })
