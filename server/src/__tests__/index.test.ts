@@ -1,12 +1,12 @@
-import supertest from 'supertest'
-import { beforeEach, describe, expect, test } from 'vitest'
+import request from 'supertest'
+import { beforeAll, describe, expect, test } from 'vitest'
 import { prisma } from '../lib/prisma'
 import app from '../server'
 
 describe('GET /users', () => {
   // afterAll(() => app.close());
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const user = await prisma.user.findUnique({
       where: {
         email: 'carlos@email.com',
@@ -25,7 +25,7 @@ describe('GET /users', () => {
   test('should return all users', async () => {
     await app.ready()
 
-    const response = await supertest(app.server).get('/users')
+    const response = await request(app.server).get('/users')
 
     expect(response.statusCode).toEqual(200)
     expect(response.text.length).toBeGreaterThan(0)
@@ -34,7 +34,7 @@ describe('GET /users', () => {
   test('should create a user', async () => {
     await app.ready()
 
-    const response = await supertest(app.server).post('/users').send({
+    const response = await request(app.server).post('/users').send({
       firstname: 'Carlos',
       lastname: 'Silva',
       email: 'carlos@email.com',
@@ -42,6 +42,25 @@ describe('GET /users', () => {
       password: '12345',
     })
 
+    console.log('data: ', response.body)
+
     expect(response.status).toBe(200)
+  })
+
+  test('should not create a new user with an existing email', async () => {
+    const response = await request(app.server).post('/users').send({
+      firstname: 'Carlos',
+      lastname: 'Silva',
+      email: 'carlos@email.com',
+      mobile: '999999992',
+      password: '12345',
+    })
+
+    // console.log('error: ', response.request._data)
+
+    expect(response.status).toBe(409)
+    expect(response.body.data).toBe(undefined)
+    expect(response.body).toHaveProperty('message')
+    expect(response.body.message).toBe('User already exists')
   })
 })
