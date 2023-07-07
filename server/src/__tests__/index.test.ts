@@ -42,8 +42,6 @@ describe('GET /users', () => {
       password: '12345',
     })
 
-    console.log('data: ', response.body)
-
     expect(response.status).toBe(200)
   })
 
