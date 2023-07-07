@@ -3,6 +3,10 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
 export async function authRoutes(app: FastifyInstance) {
+  app.get('/', async () => {
+    throw new Error('Sample Error')
+  })
+
   app.get('/users', async (request, reply) => {
     const users = await prisma.user.findMany()
 
@@ -11,35 +15,65 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post('/users', async (request, reply) => {
     const userSchema = z.object({
-      firstname: z.string().min(1),
-      lastname: z.string().min(1),
+      firstname: z.string({
+        required_error: 'Firstname is required',
+        invalid_type_error: 'Title must be a string',
+      }),
+      lastname: z
+        .string({
+          required_error: 'Lastname is require',
+          invalid_type_error: 'Title must be a string',
+        })
+        .min(1),
       mobile: z.string().min(6).max(14),
-      password: z.string(),
-      email: z.string(),
+      password: z.string().min(8),
+      email: z
+        .string({
+          required_error: 'Email is required',
+        })
+        .email({ message: 'Invalid email address' }),
     })
 
-    const userInfo = userSchema.parse(request.body)
+    try {
+      const userInfo = userSchema.parse(request.body)
 
-    let user = await prisma.user.findUnique({
-      where: {
-        email: userInfo.email,
-      },
-    })
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          firstname: userInfo.firstname,
-          lastname: userInfo.lastname,
-          mobile: userInfo.mobile,
-          password: userInfo.password,
+      let user = await prisma.user.findUnique({
+        where: {
           email: userInfo.email,
         },
       })
-    } else {
-      reply.code(409).send({ message: 'User already exists', success: false })
+
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            firstname: userInfo.firstname,
+            lastname: userInfo.lastname,
+            mobile: userInfo.mobile,
+            password: userInfo.password,
+            email: userInfo.email,
+          },
+        })
+
+        return reply.status(200).send({
+          success: true,
+          createdUser: user,
+        })
+      }
+    } catch (e) {
+      if (e instanceof z.ZodError) {
+        return reply.status(400).send({
+          success: false,
+          error: e.flatten(),
+        })
+      } else if (e instanceof Error) {
+        return reply.status(400).send({
+          message: e.message,
+        })
+      }
     }
 
-    return user
+    // } else {
+    //   reply.code(409).send({ message: 'User already exists', success: false })
+    // }
   })
 }

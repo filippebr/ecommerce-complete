@@ -1,7 +1,10 @@
 import fastify from 'fastify'
+import { errorHandler } from './middleware/errorHandler'
 import { authRoutes } from './routes/auth'
 
 const server = fastify()
+
+errorHandler(server)
 
 server.register(authRoutes)
 
