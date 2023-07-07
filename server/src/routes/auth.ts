@@ -34,6 +34,7 @@ export async function authRoutes(app: FastifyInstance) {
         .email({ message: 'Invalid email address' }),
     })
 
+    // eslint-disable-next-line no-useless-catch
     try {
       const userInfo = userSchema.parse(request.body)
 
@@ -60,16 +61,17 @@ export async function authRoutes(app: FastifyInstance) {
         })
       }
     } catch (e) {
-      if (e instanceof z.ZodError) {
-        return reply.status(400).send({
-          success: false,
-          error: e.flatten(),
-        })
-      } else if (e instanceof Error) {
-        return reply.status(400).send({
-          message: e.message,
-        })
-      }
+      // if (e instanceof z.ZodError) {
+      //   return reply.status(400).send({
+      //     success: false,
+      //     error: e.flatten(),
+      //   })
+      // } else if (e instanceof Error) {
+      //   return reply.status(400).send({
+      //     message: e.message,
+      //   })
+      // }
+      throw e
     }
 
     // } else {

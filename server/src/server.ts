@@ -4,7 +4,8 @@ import { authRoutes } from './routes/auth'
 
 const server = fastify()
 
-errorHandler(server)
+server.setErrorHandler(errorHandler)
+// server.register(errorHandler)
 
 server.register(authRoutes)
 
