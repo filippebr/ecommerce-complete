@@ -36,7 +36,6 @@ export async function authRoutes(app: FastifyInstance) {
         .email({ message: 'Invalid email address' }),
     })
 
-    // eslint-disable-next-line no-useless-catch
     try {
       const userInfo = userSchema.parse(request.body)
 
