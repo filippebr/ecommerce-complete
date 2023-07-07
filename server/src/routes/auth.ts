@@ -15,10 +15,12 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post('/users', async (request, reply) => {
     const userSchema = z.object({
-      firstname: z.string({
-        required_error: 'Firstname is required',
-        invalid_type_error: 'Title must be a string',
-      }),
+      firstname: z
+        .string({
+          required_error: 'Firstname is required',
+          invalid_type_error: 'Title must be a string',
+        })
+        .min(1),
       lastname: z
         .string({
           required_error: 'Lastname is require',
@@ -59,23 +61,11 @@ export async function authRoutes(app: FastifyInstance) {
           success: true,
           createdUser: user,
         })
+      } else {
+        reply.code(409).send({ message: 'User already exists', success: false })
       }
-    } catch (e) {
-      // if (e instanceof z.ZodError) {
-      //   return reply.status(400).send({
-      //     success: false,
-      //     error: e.flatten(),
-      //   })
-      // } else if (e instanceof Error) {
-      //   return reply.status(400).send({
-      //     message: e.message,
-      //   })
-      // }
-      throw e
+    } catch (error) {
+      reply.send(error)
     }
-
-    // } else {
-    //   reply.code(409).send({ message: 'User already exists', success: false })
-    // }
   })
 }
