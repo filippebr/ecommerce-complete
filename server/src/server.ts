@@ -5,11 +5,8 @@ import { authRoutes } from './routes/auth'
 const server = fastify()
 
 server.setErrorHandler(errorHandler)
-// server.register(errorHandler)
 
 server.register(authRoutes)
-
-// API RESTful
 
 const PORT = 3333
 
