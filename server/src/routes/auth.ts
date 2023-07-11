@@ -40,9 +40,8 @@ export async function authRoutes(app: FastifyInstance) {
     try {
       const userInfo = userSchema.parse(request.body)
       const saltRounds = 10
-      const passwordHashed = bcrypt.hashSync(userInfo.password, saltRounds)
-
-      console.log(passwordHashed)
+      const salt = bcrypt.genSaltSync(saltRounds)
+      const passwordHashed = bcrypt.hashSync(userInfo.password, salt)
 
       let user = await prisma.user.findUnique({
         where: {
