@@ -39,7 +39,7 @@ describe('GET /users', () => {
       lastname: 'Silva',
       email: 'carlos@email.com',
       mobile: '999999992',
-      password: '12345',
+      password: '12345678',
     })
 
     expect(response.status).toBe(200)
@@ -51,7 +51,7 @@ describe('GET /users', () => {
       lastname: 'Silva',
       email: 'carlos@email.com',
       mobile: '999999992',
-      password: '12345',
+      password: '12345678',
     })
 
     // console.log('error: ', response.request._data)
