@@ -9,7 +9,7 @@ describe('GET /users', () => {
   beforeAll(async () => {
     const user = await prisma.user.findUnique({
       where: {
-        email: 'carlos@email.com',
+        email: 'doe@email.com',
       },
     })
 
@@ -35,9 +35,9 @@ describe('GET /users', () => {
     await app.ready()
 
     const response = await request(app.server).post('/users').send({
-      firstname: 'Carlos',
-      lastname: 'Silva',
-      email: 'carlos@email.com',
+      firstname: 'John',
+      lastname: 'Doe',
+      email: 'doe@email.com',
       mobile: '999999992',
       password: '12345678',
     })
@@ -47,9 +47,9 @@ describe('GET /users', () => {
 
   test('should not create a new user with an existing email', async () => {
     const response = await request(app.server).post('/users').send({
-      firstname: 'Carlos',
-      lastname: 'Silva',
-      email: 'carlos@email.com',
+      firstname: 'Jonh',
+      lastname: 'Doe',
+      email: 'doe@email.com',
       mobile: '999999992',
       password: '12345678',
     })
