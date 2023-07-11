@@ -43,30 +43,38 @@ export async function authRoutes(app: FastifyInstance) {
       const salt = bcrypt.genSaltSync(saltRounds)
       const passwordHashed = bcrypt.hashSync(userInfo.password, salt)
 
+      const match = await bcrypt.compare(userInfo.password, passwordHashed)
+
       let user = await prisma.user.findUnique({
         where: {
           email: userInfo.email,
         },
       })
 
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            firstname: userInfo.firstname,
-            lastname: userInfo.lastname,
-            mobile: userInfo.mobile,
-            password: passwordHashed,
-            email: userInfo.email,
-          },
-        })
+      if (!match)
+        return reply
+          .code(409)
+          .send({ message: 'Password not matched', success: false })
 
-        return reply.status(200).send({
-          success: true,
-          createdUser: user,
-        })
-      } else {
-        reply.code(409).send({ message: 'User already exists', success: false })
-      }
+      if (user)
+        return reply
+          .code(409)
+          .send({ message: 'User already exists', success: false })
+
+      user = await prisma.user.create({
+        data: {
+          firstname: userInfo.firstname,
+          lastname: userInfo.lastname,
+          mobile: userInfo.mobile,
+          password: passwordHashed,
+          email: userInfo.email,
+        },
+      })
+
+      return reply.status(200).send({
+        success: true,
+        createdUser: user,
+      })
     } catch (error) {
       reply.send(error)
     }
