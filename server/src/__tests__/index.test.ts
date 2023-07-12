@@ -34,7 +34,7 @@ describe('GET /users', () => {
   test('should create a user', async () => {
     await app.ready()
 
-    const response = await request(app.server).post('/users').send({
+    const response = await request(app.server).post('/users/register').send({
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
@@ -46,7 +46,7 @@ describe('GET /users', () => {
   })
 
   test('should not create a new user with an existing email', async () => {
-    const response = await request(app.server).post('/users').send({
+    const response = await request(app.server).post('/users/register').send({
       firstname: 'Jonh',
       lastname: 'Doe',
       email: 'doe@email.com',

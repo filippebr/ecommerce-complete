@@ -14,7 +14,7 @@ export async function authRoutes(app: FastifyInstance) {
     reply.send({ users })
   })
 
-  app.post('/users', async (request, reply) => {
+  app.post('/users/register', async (request, reply) => {
     const userSchema = z.object({
       firstname: z
         .string({
