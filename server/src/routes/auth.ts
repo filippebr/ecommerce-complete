@@ -79,4 +79,31 @@ export async function authRoutes(app: FastifyInstance) {
       reply.send(error)
     }
   })
+
+  app.post('/users/login', async (request, reply) => {
+    const userSchema = z.object({
+      password: z.string().min(8),
+      email: z
+        .string({
+          required_error: 'Email is required',
+        })
+        .email({ message: 'Invalid email address' }),
+    })
+
+    const userInfo = userSchema.parse(request.body)
+
+    // let user = await prisma.user.findUnique({
+    //   where: {
+    //     email: userInfo.email,
+    //   },
+    // })
+
+    // const match = await bcrypt.compare(userInfo.password, passwordHashed)
+
+    // if ( user && match ) {
+
+    // }
+
+    console.log(userInfo.email, userInfo.password)
+  })
 }
