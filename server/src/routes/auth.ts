@@ -105,15 +105,15 @@ export async function authRoutes(app: FastifyInstance) {
       passwordHashed,
     )
 
-    if (!match)
-      return reply
-        .code(409)
-        .send({ message: 'Invalid password', success: false })
-
     if (!user)
       return reply
         .code(409)
         .send({ message: 'Email not found', success: false })
+
+    if (!match)
+      return reply
+        .code(409)
+        .send({ message: 'Invalid password', success: false })
 
     reply.send({
       _id: user.id,
