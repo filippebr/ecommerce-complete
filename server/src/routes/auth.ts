@@ -92,19 +92,35 @@ export async function authRoutes(app: FastifyInstance) {
     })
 
     const userInfo = userSchema.parse(request.body)
+    const passwordHashed = bcryptService.hashPassword(userInfo.password)
 
-    // let user = await prisma.user.findUnique({
-    //   where: {
-    //     email: userInfo.email,
-    //   },
-    // })
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userInfo.email,
+      },
+    })
 
-    // const match = await bcrypt.compare(userInfo.password, passwordHashed)
+    const match = bcryptService.comparePassword(
+      userInfo.password,
+      passwordHashed,
+    )
 
-    // if ( user && match ) {
+    if (!match)
+      return reply
+        .code(409)
+        .send({ message: 'Invalid password', success: false })
 
-    // }
+    if (!user)
+      return reply
+        .code(409)
+        .send({ message: 'Email not found', success: false })
 
-    console.log(userInfo.email, userInfo.password)
+    reply.send({
+      _id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      mobile: user.mobile,
+    })
   })
 }
