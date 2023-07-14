@@ -10,9 +10,12 @@ export async function authRoutes(app: FastifyInstance) {
   })
 
   app.get('/users', async (request, reply) => {
-    const users = await prisma.user.findMany()
-
-    reply.send({ users })
+    try {
+      const users = await prisma.user.findMany()
+      reply.send({ users })
+    } catch (error) {
+      reply.send(error)
+    }
   })
 
   app.post('/users/register', async (request, reply) => {
