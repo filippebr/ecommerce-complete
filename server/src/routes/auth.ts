@@ -125,7 +125,7 @@ export async function authRoutes(app: FastifyInstance) {
       lastname: user?.lastname,
       email: user?.email,
       mobile: user?.mobile,
-      token: generateJsonWebToken(user?.id),
+      token: generateJsonWebToken(user),
     })
   })
 }
