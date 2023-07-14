@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-export default class bcryptService {
+export default class BcryptService {
   static hashPassword(password: string): string {
     const saltRounds = 10
     const salt = bcrypt.genSaltSync(saltRounds)

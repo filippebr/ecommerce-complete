@@ -1,7 +1,8 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
+import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
-import bcryptService from '../services/bcryptService'
+import BcryptService from '../services/bcryptService'
 
 export async function authRoutes(app: FastifyInstance) {
   app.get('/', async () => {
@@ -39,9 +40,9 @@ export async function authRoutes(app: FastifyInstance) {
 
     try {
       const userInfo = userSchema.parse(request.body)
-      const passwordHashed = bcryptService.hashPassword(userInfo.password)
+      const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
-      const match = bcryptService.comparePassword(
+      const match = BcryptService.comparePassword(
         userInfo.password,
         passwordHashed,
       )
@@ -92,7 +93,7 @@ export async function authRoutes(app: FastifyInstance) {
     })
 
     const userInfo = userSchema.parse(request.body)
-    const passwordHashed = bcryptService.hashPassword(userInfo.password)
+    const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
     const user = await prisma.user.findUnique({
       where: {
@@ -100,7 +101,7 @@ export async function authRoutes(app: FastifyInstance) {
       },
     })
 
-    const match = bcryptService.comparePassword(
+    const match = BcryptService.comparePassword(
       userInfo.password,
       passwordHashed,
     )
@@ -116,11 +117,12 @@ export async function authRoutes(app: FastifyInstance) {
         .send({ message: 'Invalid password', success: false })
 
     reply.send({
-      _id: user.id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: user.email,
-      mobile: user.mobile,
+      _id: user?.id,
+      firstname: user?.firstname,
+      lastname: user?.lastname,
+      email: user?.email,
+      mobile: user?.mobile,
+      token: generateJsonWebToken(user?.id),
     })
   })
 }
