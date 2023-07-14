@@ -61,4 +61,25 @@ describe('Authentication tests', () => {
     expect(response.body).toHaveProperty('message')
     expect(response.body.message).toBe('User already exists')
   })
+
+  test('should login an existing user', async () => {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
+
+    const response = await request(app.server).post('/users/login').send({
+      email: 'doe@email.com',
+      password: user?.password,
+    })
+
+    expect(response.status).toBe(200)
+    // expect(response.body.data).toHaveProperty('id')
+    // expect(response.body.data).toHaveProperty('name')
+    // expect(response.body.data).toHaveProperty('email')
+    // expect(response.body.data).toHaveProperty('created_at')
+    // expect(response.body.data).toHaveProperty('updated_at')
+    // expect(response.body.data).toHaveProperty('token')
+  })
 })
