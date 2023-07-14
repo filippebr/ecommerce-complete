@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { prisma } from '../lib/prisma'
 import app from '../server'
 
-describe('GET /users', () => {
+describe('Authentication tests', () => {
   // afterAll(() => app.close());
 
   beforeAll(async () => {
