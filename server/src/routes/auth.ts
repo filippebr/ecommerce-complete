@@ -33,7 +33,7 @@ export async function authRoutes(app: FastifyInstance) {
         })
         .min(1),
       mobile: z.string().min(6).max(14),
-      password: z.string().min(8),
+      password: z.string().min(6),
       email: z
         .string({
           required_error: 'Email is required',
@@ -87,7 +87,7 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post('/users/login', async (request, reply) => {
     const userSchema = z.object({
-      password: z.string().min(8),
+      password: z.string().min(6),
       email: z
         .string({
           required_error: 'Email is required',

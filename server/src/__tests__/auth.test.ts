@@ -100,4 +100,19 @@ describe('Authentication tests', () => {
     expect(response.body).toHaveProperty('message')
     expect(response.body.message).toBe('Email not found')
   })
+
+  test('should not login a user with invalid data', async () => {
+    const response = await request(app.server).post('/users/login').send({
+      email: 'not a valid email',
+      password: '',
+    })
+
+    expect(response.status).toBe(400)
+    expect(response.body).toHaveProperty('error')
+    expect(response.body.success).toBe(false)
+    expect(response.body.error.fieldErrors).toEqual({
+      password: ['String must contain at least 6 character(s)'],
+      email: ['Invalid email address'],
+    })
+  })
 })
