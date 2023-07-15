@@ -89,4 +89,15 @@ describe('Authentication tests', () => {
     expect(response.body).toHaveProperty('updatedAt')
     expect(response.body).toHaveProperty('token')
   })
+
+  test('should not login a non-existing user', async () => {
+    const response = await request(app.server).post('/users/login').send({
+      email: 'jane.doe@email.com',
+      password: '12345678',
+    })
+
+    expect(response.status).toBe(409)
+    expect(response.body).toHaveProperty('message')
+    expect(response.body.message).toBe('Email not found')
+  })
 })
