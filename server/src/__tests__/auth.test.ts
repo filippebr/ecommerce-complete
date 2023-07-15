@@ -43,6 +43,13 @@ describe('Authentication tests', () => {
     })
 
     expect(response.status).toBe(200)
+    expect(response.body.createdUser).toHaveProperty('id')
+    expect(response.body.createdUser).toHaveProperty('firstname')
+    expect(response.body.createdUser).toHaveProperty('lastname')
+    expect(response.body.createdUser).toHaveProperty('email')
+    expect(response.body.createdUser).toHaveProperty('mobile')
+    expect(response.body.createdUser).toHaveProperty('createdAt')
+    expect(response.body.createdUser).toHaveProperty('updatedAt')
   })
 
   test('should not create a new user with an existing email', async () => {
@@ -53,8 +60,6 @@ describe('Authentication tests', () => {
       mobile: '999999992',
       password: '12345678',
     })
-
-    // console.log('error: ', response.request._data)
 
     expect(response.status).toBe(409)
     expect(response.body.data).toBe(undefined)
@@ -75,11 +80,13 @@ describe('Authentication tests', () => {
     })
 
     expect(response.status).toBe(200)
-    // expect(response.body.data).toHaveProperty('id')
-    // expect(response.body.data).toHaveProperty('name')
-    // expect(response.body.data).toHaveProperty('email')
-    // expect(response.body.data).toHaveProperty('created_at')
-    // expect(response.body.data).toHaveProperty('updated_at')
-    // expect(response.body.data).toHaveProperty('token')
+    expect(response.body).toHaveProperty('_id')
+    expect(response.body).toHaveProperty('firstname')
+    expect(response.body).toHaveProperty('lastname')
+    expect(response.body).toHaveProperty('email')
+    expect(response.body).toHaveProperty('mobile')
+    expect(response.body).toHaveProperty('createdAt')
+    expect(response.body).toHaveProperty('updatedAt')
+    expect(response.body).toHaveProperty('token')
   })
 })
