@@ -5,8 +5,8 @@ import { prisma } from '../lib/prisma'
 import BcryptService from '../services/bcryptService'
 
 export async function authRoutes(app: FastifyInstance) {
-  app.get('/', async () => {
-    throw new Error('Sample Error')
+  app.get('/', async (request, reply) => {
+    reply.send('404 Page not Found')
   })
 
   app.get('/users', async (request, reply) => {
@@ -98,6 +98,9 @@ export async function authRoutes(app: FastifyInstance) {
     const userInfo = userSchema.parse(request.body)
     const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
+    console.log('userInfo.password: ', userInfo.password)
+    console.log('passwordHashed: ', passwordHashed)
+
     const user = await prisma.user.findUnique({
       where: {
         email: userInfo.email,
@@ -108,6 +111,8 @@ export async function authRoutes(app: FastifyInstance) {
       userInfo.password,
       passwordHashed,
     )
+
+    console.log('match: ', match)
 
     if (!user)
       return reply
