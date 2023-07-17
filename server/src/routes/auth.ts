@@ -45,10 +45,10 @@ export async function authRoutes(app: FastifyInstance) {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
-      const match = BcryptService.comparePassword(
-        userInfo.password,
-        passwordHashed,
-      )
+      // const match = BcryptService.comparePassword(
+      //   userInfo.password,
+      //   passwordHashed,
+      // )
 
       let user = await prisma.user.findUnique({
         where: {
@@ -56,10 +56,10 @@ export async function authRoutes(app: FastifyInstance) {
         },
       })
 
-      if (!match)
-        return reply
-          .code(409)
-          .send({ message: 'Password not matched', success: false })
+      // if (!match)
+      //   return reply
+      //     .code(409)
+      //     .send({ message: 'Password not matched', success: false })
 
       if (user)
         return reply
@@ -96,10 +96,6 @@ export async function authRoutes(app: FastifyInstance) {
     })
 
     const userInfo = userSchema.parse(request.body)
-    const passwordHashed = BcryptService.hashPassword(userInfo.password)
-
-    console.log('userInfo.password: ', userInfo.password)
-    console.log('passwordHashed: ', passwordHashed)
 
     const user = await prisma.user.findUnique({
       where: {
@@ -107,22 +103,22 @@ export async function authRoutes(app: FastifyInstance) {
       },
     })
 
-    const match = BcryptService.comparePassword(
-      userInfo.password,
-      passwordHashed,
-    )
+    if (user?.password) {
+      const match = BcryptService.comparePassword(
+        userInfo.password,
+        user?.password,
+      )
 
-    console.log('match: ', match)
+      if (!match)
+        return reply
+          .code(409)
+          .send({ message: 'Invalid password', success: false })
+    }
 
     if (!user)
       return reply
         .code(409)
         .send({ message: 'Email not found', success: false })
-
-    if (!match)
-      return reply
-        .code(409)
-        .send({ message: 'Invalid password', success: false })
 
     reply.send({
       _id: user?.id,
