@@ -68,15 +68,9 @@ describe('Authentication tests', () => {
   })
 
   test('should login an existing user', async () => {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: 'doe@email.com',
-      },
-    })
-
     const response = await request(app.server).post('/users/login').send({
       email: 'doe@email.com',
-      password: user?.password,
+      password: '12345678',
     })
 
     expect(response.status).toBe(200)
@@ -123,11 +117,8 @@ describe('Authentication tests', () => {
     })
 
     expect(response.status).toBe(409)
-    // expect(response.body).toHaveProperty('error')
-    // expect(response.body.success).toBe(false)
-    // expect(response.body.error.fieldErrors).toEqual({
-    //   password: ['String must contain at least 6 character(s)'],
-    //   email: ['Invalid email address'],
-    // })
+    expect(response.body).toHaveProperty('message')
+    expect(response.body.success).toBe(false)
+    expect(response.body.message).toBe('Invalid password')
   })
 })
