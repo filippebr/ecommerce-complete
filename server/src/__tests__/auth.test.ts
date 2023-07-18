@@ -143,4 +143,14 @@ describe('Authentication tests', () => {
     expect(response.body.user.mobile).toEqual(user?.mobile)
     expect(response.body.user.password).toEqual(user?.password)
   })
+
+  test('should not return a user', async () => {
+    await app.ready()
+
+    const response = await request(app.server).get(`/user/:00000`)
+
+    console.log('response.body.user: ', response)
+
+    expect(response.body.user).toEqual(null)
+  })
 })
