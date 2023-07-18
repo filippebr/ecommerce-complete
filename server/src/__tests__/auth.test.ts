@@ -38,7 +38,7 @@ describe('Authentication tests', () => {
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
-      mobile: '999999992',
+      mobile: '999999990',
       password: '12345678',
     })
 
@@ -120,5 +120,27 @@ describe('Authentication tests', () => {
     expect(response.body).toHaveProperty('message')
     expect(response.body.success).toBe(false)
     expect(response.body.message).toBe('Invalid password')
+  })
+
+  test('should return a user', async () => {
+    await app.ready()
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
+
+    const id = user?.id
+
+    const response = await request(app.server).get(`/user/${id}`)
+
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.user.id).toEqual(user?.id)
+    expect(response.body.user.firstname).toEqual(user?.firstname)
+    expect(response.body.user.lastname).toEqual(user?.lastname)
+    expect(response.body.user.email).toEqual(user?.email)
+    expect(response.body.user.mobile).toEqual(user?.mobile)
+    expect(response.body.user.password).toEqual(user?.password)
   })
 })
