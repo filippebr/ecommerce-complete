@@ -1,10 +1,36 @@
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
 import BcryptService from '../services/bcryptService'
 
 export async function authRoutes(app: FastifyInstance) {
+  interface UserParams {
+    id: string
+  }
+
+  app.get(
+    '/user/:id',
+    async (
+      request: FastifyRequest<{ Params: UserParams }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        const { id } = request.params
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id,
+          },
+        })
+
+        reply.send({ user })
+      } catch (error) {
+        reply.send(error)
+      }
+    },
+  )
+
   app.get('/users', async (request, reply) => {
     try {
       const users = await prisma.user.findMany()
