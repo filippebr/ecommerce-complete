@@ -5,10 +5,6 @@ import { prisma } from '../lib/prisma'
 import BcryptService from '../services/bcryptService'
 
 export async function authRoutes(app: FastifyInstance) {
-  app.get('/', async (request, reply) => {
-    reply.send('404 Page not Found')
-  })
-
   app.get('/users', async (request, reply) => {
     try {
       const users = await prisma.user.findMany()
