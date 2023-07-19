@@ -159,7 +159,7 @@ export async function authRoutes(app: FastifyInstance) {
           },
         })
 
-        return reply.send({ user })
+        return reply.send({ message: 'User deleted successfully', user })
       } catch (error) {
         return reply.send({ message: 'User not found', success: false })
       }

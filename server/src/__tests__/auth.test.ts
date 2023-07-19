@@ -151,4 +151,36 @@ describe('Authentication tests', () => {
 
     expect(response.body.user).toEqual(null)
   })
+
+  test('should create and delete a user', async () => {
+    await app.ready()
+
+    // Create a new user
+    const createUserResponse = await request(app.server)
+      .post('/users/register')
+      .send({
+        firstname: 'Jose',
+        lastname: 'Doe',
+        email: 'jose.doe@email.com',
+        mobile: '9999999999',
+        password: '12345678',
+      })
+
+    console.log('createUserResponse: ', createUserResponse)
+
+    expect(createUserResponse.status).toBe(200)
+    expect(createUserResponse.body.createdUser).toHaveProperty('id')
+
+    // Extract the created user's ID
+    const { id } = createUserResponse.body.createdUser
+
+    // Delete the user
+    const deleteUserResponse = await request(app.server).delete(`/user/${id}`)
+
+    expect(deleteUserResponse.status).toBe(200)
+    expect(deleteUserResponse.body).toHaveProperty(
+      'message',
+      'User deleted successfully',
+    )
+  })
 })
