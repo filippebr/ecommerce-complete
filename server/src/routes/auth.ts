@@ -143,4 +143,26 @@ export async function authRoutes(app: FastifyInstance) {
       token: generateJsonWebToken(user),
     })
   })
+
+  app.delete(
+    '/user/:id',
+    async (
+      request: FastifyRequest<{ Params: UserParams }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        const { id } = request.params
+
+        const user = await prisma.user.delete({
+          where: {
+            id,
+          },
+        })
+
+        return reply.send({ user })
+      } catch (error) {
+        return reply.send({ message: 'User not found', success: false })
+      }
+    },
+  )
 }

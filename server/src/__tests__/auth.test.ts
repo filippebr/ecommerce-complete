@@ -149,8 +149,6 @@ describe('Authentication tests', () => {
 
     const response = await request(app.server).get(`/user/:00000`)
 
-    console.log('response.body.user: ', response)
-
     expect(response.body.user).toEqual(null)
   })
 })
