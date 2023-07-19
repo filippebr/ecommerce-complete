@@ -1,5 +1,5 @@
 import request from 'supertest'
-import { beforeAll, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 import { prisma } from '../lib/prisma'
 import app from '../server'
 
@@ -20,6 +20,14 @@ describe('Authentication tests', () => {
         },
       })
     }
+  })
+
+  afterAll(async () => {
+    await prisma.user.delete({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
   })
 
   test('should return all users', async () => {
@@ -166,7 +174,7 @@ describe('Authentication tests', () => {
         password: '12345678',
       })
 
-    console.log('createUserResponse: ', createUserResponse)
+    // console.log('createUserResponse: ', createUserResponse)
 
     expect(createUserResponse.status).toBe(200)
     expect(createUserResponse.body.createdUser).toHaveProperty('id')
