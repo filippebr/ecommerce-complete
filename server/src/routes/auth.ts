@@ -3,6 +3,7 @@ import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
 import BcryptService from '../services/bcryptService'
+import userSchema from '../services/userSchema'
 
 export async function authRoutes(app: FastifyInstance) {
   interface UserParams {
@@ -41,29 +42,6 @@ export async function authRoutes(app: FastifyInstance) {
   })
 
   app.post('/user/register', async (request, reply) => {
-    const userSchema = z.object({
-      firstname: z
-        .string({
-          required_error: 'Firstname is required',
-          invalid_type_error: 'Title must be a string',
-        })
-        .nonempty(),
-      lastname: z
-        .string({
-          required_error: 'Lastname is require',
-          invalid_type_error: 'Title must be a string',
-        })
-        .nonempty(),
-      mobile: z.string().min(6).max(14),
-      password: z.string().min(6),
-      email: z
-        .string({
-          required_error: 'Email is required',
-        })
-        .email({ message: 'Invalid email address' }),
-      role: z.string().nonempty(),
-    })
-
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
@@ -183,29 +161,6 @@ export async function authRoutes(app: FastifyInstance) {
       const { id } = request.params
 
       try {
-        const userSchema = z.object({
-          firstname: z
-            .string({
-              required_error: 'Firstname is required',
-              invalid_type_error: 'Title must be a string',
-            })
-            .nonempty(),
-          lastname: z
-            .string({
-              required_error: 'Lastname is require',
-              invalid_type_error: 'Title must be a string',
-            })
-            .nonempty(),
-          mobile: z.string().min(6).max(14),
-          password: z.string().min(6),
-          email: z
-            .string({
-              required_error: 'Email is required',
-            })
-            .email({ message: 'Invalid email address' }),
-          role: z.string().nonempty(),
-        })
-
         const userInfo = userSchema.parse(request.body)
 
         const user = await prisma.user.update({
