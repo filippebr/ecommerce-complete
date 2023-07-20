@@ -69,7 +69,10 @@ export async function authRoutes(app: FastifyInstance) {
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
       if (userInfo.role !== 'admin' && userInfo.role !== 'user')
-        return reply.code(409).send({ message: 'Wrong role', success: false })
+        return reply.code(409).send({
+          message: `The database do not accept '${userInfo.role}' role`,
+          success: false,
+        })
 
       let user = await prisma.user.findUnique({
         where: {
