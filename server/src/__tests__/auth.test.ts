@@ -48,6 +48,7 @@ describe('Authentication tests', () => {
       email: 'doe@email.com',
       mobile: '999999990',
       password: '12345678',
+      role: 'user',
     })
 
     expect(response.status).toBe(200)
@@ -67,6 +68,7 @@ describe('Authentication tests', () => {
       email: 'doe@email.com',
       mobile: '999999992',
       password: '12345678',
+      role: 'user',
     })
 
     expect(response.status).toBe(409)
@@ -172,6 +174,7 @@ describe('Authentication tests', () => {
         email: 'jose.doe@email.com',
         mobile: '9999999999',
         password: '12345678',
+        role: 'user',
       })
 
     // console.log('createUserResponse: ', createUserResponse)
