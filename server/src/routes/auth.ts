@@ -61,15 +61,15 @@ export async function authRoutes(app: FastifyInstance) {
           required_error: 'Email is required',
         })
         .email({ message: 'Invalid email address' }),
-      // role: z.string().nonempty(),
+      role: z.string().nonempty(),
     })
 
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
-      // if (userInfo.role !== 'admin' && userInfo.role !== 'user')
-      //   return reply.code(409).send({ message: 'Wrong role', success: false })
+      if (userInfo.role !== 'admin' && userInfo.role !== 'user')
+        return reply.code(409).send({ message: 'Wrong role', success: false })
 
       let user = await prisma.user.findUnique({
         where: {
@@ -89,6 +89,7 @@ export async function authRoutes(app: FastifyInstance) {
           mobile: userInfo.mobile,
           password: passwordHashed,
           email: userInfo.email,
+          role: userInfo.role,
         },
       })
 
