@@ -174,25 +174,57 @@ export async function authRoutes(app: FastifyInstance) {
     },
   )
 
-  // app.put(
-  //   '/user/:id',
-  //   async (
-  //     request: FastifyRequest<{ Params: UserParams }>,
-  //     reply: FastifyReply,
-  //   ) => {
-  //     try {
-  //       const { id } = request.params
+  app.put(
+    '/user/:id',
+    async (
+      request: FastifyRequest<{ Params: UserParams }>,
+      reply: FastifyReply,
+    ) => {
+      const { id } = request.params
 
-  //       const user = await prisma.user.delete({
-  //         where: {
-  //           id,
-  //         },
-  //       })
+      try {
+        const userSchema = z.object({
+          firstname: z
+            .string({
+              required_error: 'Firstname is required',
+              invalid_type_error: 'Title must be a string',
+            })
+            .nonempty(),
+          lastname: z
+            .string({
+              required_error: 'Lastname is require',
+              invalid_type_error: 'Title must be a string',
+            })
+            .nonempty(),
+          mobile: z.string().min(6).max(14),
+          password: z.string().min(6),
+          email: z
+            .string({
+              required_error: 'Email is required',
+            })
+            .email({ message: 'Invalid email address' }),
+          role: z.string().nonempty(),
+        })
 
-  //       return reply.send({ message: 'User deleted successfully', user })
-  //     } catch (error) {
-  //       return reply.send({ message: 'User not found', success: false })
-  //     }
-  //   },
-  // )
+        const userInfo = userSchema.parse(request.body)
+
+        const user = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            firstname: userInfo?.firstname,
+            lastname: userInfo?.lastname,
+            mobile: userInfo?.mobile,
+            email: userInfo?.email,
+            role: userInfo?.role,
+          },
+        })
+
+        return reply.send({ message: 'User updated successfully', user })
+      } catch (error) {
+        return reply.send({ message: 'User not found', success: false })
+      }
+    },
+  )
 }
