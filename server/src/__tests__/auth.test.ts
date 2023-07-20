@@ -42,7 +42,7 @@ describe('Authentication tests', () => {
   test('should create a user', async () => {
     await app.ready()
 
-    const response = await request(app.server).post('/users/register').send({
+    const response = await request(app.server).post('/user/register').send({
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
@@ -61,7 +61,7 @@ describe('Authentication tests', () => {
   })
 
   test('should not create a new user with an existing email', async () => {
-    const response = await request(app.server).post('/users/register').send({
+    const response = await request(app.server).post('/user/register').send({
       firstname: 'Jonh',
       lastname: 'Doe',
       email: 'doe@email.com',
@@ -165,7 +165,7 @@ describe('Authentication tests', () => {
 
     // Create a new user
     const createUserResponse = await request(app.server)
-      .post('/users/register')
+      .post('/user/register')
       .send({
         firstname: 'Jose',
         lastname: 'Doe',

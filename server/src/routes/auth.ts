@@ -40,20 +40,20 @@ export async function authRoutes(app: FastifyInstance) {
     }
   })
 
-  app.post('/users/register', async (request, reply) => {
+  app.post('/user/register', async (request, reply) => {
     const userSchema = z.object({
       firstname: z
         .string({
           required_error: 'Firstname is required',
           invalid_type_error: 'Title must be a string',
         })
-        .min(1),
+        .nonempty(),
       lastname: z
         .string({
           required_error: 'Lastname is require',
           invalid_type_error: 'Title must be a string',
         })
-        .min(1),
+        .nonempty(),
       mobile: z.string().min(6).max(14),
       password: z.string().min(6),
       email: z
@@ -61,11 +61,15 @@ export async function authRoutes(app: FastifyInstance) {
           required_error: 'Email is required',
         })
         .email({ message: 'Invalid email address' }),
+      // role: z.string().nonempty(),
     })
 
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
+
+      // if (userInfo.role !== 'admin' && userInfo.role !== 'user')
+      //   return reply.code(409).send({ message: 'Wrong role', success: false })
 
       let user = await prisma.user.findUnique({
         where: {
@@ -165,4 +169,26 @@ export async function authRoutes(app: FastifyInstance) {
       }
     },
   )
+
+  // app.put(
+  //   '/user/:id',
+  //   async (
+  //     request: FastifyRequest<{ Params: UserParams }>,
+  //     reply: FastifyReply,
+  //   ) => {
+  //     try {
+  //       const { id } = request.params
+
+  //       const user = await prisma.user.delete({
+  //         where: {
+  //           id,
+  //         },
+  //       })
+
+  //       return reply.send({ message: 'User deleted successfully', user })
+  //     } catch (error) {
+  //       return reply.send({ message: 'User not found', success: false })
+  //     }
+  //   },
+  // )
 }
