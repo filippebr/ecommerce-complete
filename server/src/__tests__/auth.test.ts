@@ -194,4 +194,30 @@ describe('Authentication tests', () => {
       'User deleted successfully',
     )
   })
+
+  test('should update a already created user', async () => {
+    await app.ready()
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
+
+    const id = user?.id
+
+    // Create a new user
+    const updateUserResponse = await request(app.server)
+      .put(`/user/${id}`)
+      .send({
+        firstname: 'Jon',
+        lastname: 'Do',
+        email: 'doe@email.com',
+        mobile: '9999999997',
+        password: '12345678',
+        role: 'user',
+      })
+
+    expect(updateUserResponse.status).toBe(200)
+  })
 })
