@@ -71,7 +71,7 @@ export async function authRoutes(app: FastifyInstance) {
           password: passwordHashed,
           email: userInfo.email,
           role: userInfo.role,
-          cart: userInfo.cart,
+          address: userInfo.address,
         },
       })
 
@@ -80,7 +80,7 @@ export async function authRoutes(app: FastifyInstance) {
         createdUser: user,
       })
     } catch (error) {
-      reply.send(error)
+      reply.send({ message: error })
     }
   })
 
