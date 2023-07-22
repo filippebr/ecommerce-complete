@@ -71,6 +71,7 @@ export async function authRoutes(app: FastifyInstance) {
           password: passwordHashed,
           email: userInfo.email,
           role: userInfo.role,
+          cart: userInfo.cart,
         },
       })
 

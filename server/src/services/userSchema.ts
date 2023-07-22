@@ -21,6 +21,7 @@ const userSchema = z.object({
     })
     .email({ message: 'Invalid email address' }),
   role: z.string().nonempty(),
+  cart: z.string(),
 })
 
 export default userSchema
