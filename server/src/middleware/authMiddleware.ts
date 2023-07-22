@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt, { Secret } from 'jsonwebtoken'
-import { prisma } from '../lib/prisma'
+// import { prisma } from '../lib/prisma'
 
 export default async function authMiddleware(
   request: FastifyRequest,
@@ -14,14 +14,6 @@ export default async function authMiddleware(
       if (token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret)
         console.log('decoded: ', decoded)
-
-        const user = await prisma.user.findUnique({
-          where: {
-            id,
-          },
-        })
-
-        console.log('user: ', user)
       }
     } catch (error) {
       reply.send({
