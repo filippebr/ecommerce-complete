@@ -218,6 +218,13 @@ describe('Authentication tests', () => {
         role: 'user',
       })
 
+    console.log('user: ', user)
+    console.log('updateUserResponse: ', updateUserResponse)
+
     expect(updateUserResponse.status).toBe(200)
+    expect(updateUserResponse.body.message).toEqual('User updated successfully')
+    expect(updateUserResponse.body.user.firstname).toEqual('Jon')
+    expect(updateUserResponse.body.user.lastname).toEqual('Do')
+    expect(updateUserResponse.body.user.mobile).toEqual('9999999997')
   })
 })
