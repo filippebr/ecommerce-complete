@@ -1,4 +1,4 @@
-import fastify, { FastifyReply, FastifyRequest } from 'fastify'
+import fastify from 'fastify'
 import authMiddleware from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorHandler'
 import { authRoutes } from './routes/auth'
@@ -10,17 +10,6 @@ server.addHook('preHandler', async (request, reply, done) => {
   await authMiddleware(request, reply)
   done()
 })
-
-server.decorate(
-  'authenticate',
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      await request.jwtVerify()
-    } catch (err) {
-      reply.send(err)
-    }
-  },
-)
 
 server.setErrorHandler(errorHandler)
 
