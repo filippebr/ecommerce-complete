@@ -1,3 +1,4 @@
+import jwt, { Secret } from 'jsonwebtoken'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 import { prisma } from '../lib/prisma'
@@ -143,9 +144,18 @@ describe('Authentication tests', () => {
       },
     })
 
-    const id = user?.id
+    const token = jwt.sign(
+      { userId: user?.id },
+      process.env.JWT_SECRET as Secret,
+      {
+        expiresIn: '1h', // Set the token expiry time according to your application's requirements
+      },
+    )
 
-    const response = await request(app.server).get(`/user/${id}`)
+    // Include the token in the request headers
+    const response = await request(app.server)
+      .get(`/user/${user?.id}`)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toEqual(200)
     expect(response.body.user.id).toEqual(user?.id)
@@ -159,7 +169,25 @@ describe('Authentication tests', () => {
   test('should not return a user', async () => {
     await app.ready()
 
-    const response = await request(app.server).get(`/user/:00000`)
+    const user = await prisma.user.findUnique({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
+
+    const token = jwt.sign(
+      { userId: user?.id },
+      process.env.JWT_SECRET as Secret,
+      {
+        expiresIn: '1h', // Set the token expiry time according to your application's requirements
+      },
+    )
+
+    const response = await request(app.server)
+      .get(`/user/:00000`)
+      .set('Authorization', `Bearer ${token}`)
+
+    console.log('body: ', response.body)
 
     expect(response.body.user).toEqual(null)
   })
