@@ -11,8 +11,7 @@ export default async function authMiddleware(
     token = request.headers.authorization.split(' ')[1]
     try {
       if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret)
-        console.log('decoded: ', decoded)
+        jwt.verify(token, process.env.JWT_SECRET as Secret)
       }
     } catch (error) {
       reply.send({
