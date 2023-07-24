@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma'
 import app from '../server'
 
 describe('Authentication tests', () => {
-  // afterAll(() => app.close());
+  afterAll(() => app.close())
 
   beforeAll(async () => {
     const user = await prisma.user.findUnique({
@@ -46,9 +46,10 @@ describe('Authentication tests', () => {
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
-      mobile: '999999990',
+      mobile: '099999999',
       password: '12345678',
       role: 'user',
+      address: 'Rua John Doe, 123',
     })
 
     expect(response.status).toBe(200)
@@ -63,12 +64,13 @@ describe('Authentication tests', () => {
 
   test('should not create a new user with an existing email', async () => {
     const response = await request(app.server).post('/user/register').send({
-      firstname: 'Jonh',
+      firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
       mobile: '999999992',
       password: '12345678',
       role: 'user',
+      address: 'Rua John Doe, 123',
     })
 
     expect(response.status).toBe(409)
@@ -175,9 +177,8 @@ describe('Authentication tests', () => {
         mobile: '9999999999',
         password: '12345678',
         role: 'user',
+        address: 'run jose doe, 111',
       })
-
-    // console.log('createUserResponse: ', createUserResponse)
 
     expect(createUserResponse.status).toBe(200)
     expect(createUserResponse.body.createdUser).toHaveProperty('id')
@@ -206,7 +207,6 @@ describe('Authentication tests', () => {
 
     const id = user?.id
 
-    // Create a new user
     const updateUserResponse = await request(app.server)
       .put(`/user/${id}`)
       .send({
@@ -216,10 +216,8 @@ describe('Authentication tests', () => {
         mobile: '9999999997',
         password: '12345678',
         role: 'user',
+        address: 'rua jon do, 111',
       })
-
-    console.log('user: ', user)
-    console.log('updateUserResponse: ', updateUserResponse)
 
     expect(updateUserResponse.status).toBe(200)
     expect(updateUserResponse.body.message).toEqual('User updated successfully')

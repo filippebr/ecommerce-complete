@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
-import authMiddleware from '../middleware/authMiddleware'
+// import authMiddleware from '../middleware/authMiddleware'
 import BcryptService from '../services/bcryptService'
 import userSchema from '../services/userSchema'
 
@@ -13,7 +13,7 @@ interface UserParams {
 export async function authRoutes(app: FastifyInstance) {
   app.get(
     '/user/:id',
-    { preHandler: [authMiddleware] },
+    // { preHandler: [authMiddleware] },
     async (request: any, reply: FastifyReply) => {
       try {
         const { id } = request.params
@@ -173,6 +173,7 @@ export async function authRoutes(app: FastifyInstance) {
             mobile: userInfo?.mobile,
             email: userInfo?.email,
             role: userInfo?.role,
+            address: userInfo?.address,
           },
         })
 
