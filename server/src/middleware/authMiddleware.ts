@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt, { Secret } from 'jsonwebtoken'
-// import { prisma } from '../lib/prisma'
 
 export default async function authMiddleware(
   request: FastifyRequest,

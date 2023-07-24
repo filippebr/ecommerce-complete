@@ -2,20 +2,19 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
+import authMiddleware from '../middleware/authMiddleware'
 import BcryptService from '../services/bcryptService'
 import userSchema from '../services/userSchema'
 
-export async function authRoutes(app: FastifyInstance) {
-  interface UserParams {
-    id: string
-  }
+interface UserParams {
+  id: string
+}
 
+export async function authRoutes(app: FastifyInstance) {
   app.get(
     '/user/:id',
-    async (
-      request: FastifyRequest<{ Params: UserParams }>,
-      reply: FastifyReply,
-    ) => {
+    { preHandler: [authMiddleware] },
+    async (request: any, reply: FastifyReply) => {
       try {
         const { id } = request.params
 
