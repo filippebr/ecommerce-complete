@@ -49,7 +49,7 @@ describe('Authentication tests', () => {
       email: 'doe@email.com',
       mobile: '099999999',
       password: '12345678',
-      role: 'user',
+      role: 'admin',
       address: 'Rua John Doe, 123',
     })
 
@@ -148,11 +148,10 @@ describe('Authentication tests', () => {
       { userId: user?.id },
       process.env.JWT_SECRET as Secret,
       {
-        expiresIn: '1h', // Set the token expiry time according to your application's requirements
+        expiresIn: '1h',
       },
     )
 
-    // Include the token in the request headers
     const response = await request(app.server)
       .get(`/user/${user?.id}`)
       .set('Authorization', `Bearer ${token}`)
@@ -186,8 +185,6 @@ describe('Authentication tests', () => {
     const response = await request(app.server)
       .get(`/user/:00000`)
       .set('Authorization', `Bearer ${token}`)
-
-    console.log('body: ', response.body)
 
     expect(response.body.user).toEqual(null)
   })

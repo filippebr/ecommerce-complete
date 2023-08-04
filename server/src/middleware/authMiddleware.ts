@@ -14,7 +14,6 @@ export async function authMiddleware(
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret)
 
         request.body = decodedToken
-        console.log('body: ', request.body)
       }
     } catch (error) {
       reply.send({
@@ -27,6 +26,7 @@ export async function authMiddleware(
 }
 
 export async function isAdmin(request: any, reply: FastifyReply) {
+  console.log('request.body: ', request.body)
   if (request.body.id.role !== 'admin') {
     return reply.send({ message: 'Not authorized to this action' })
   }
