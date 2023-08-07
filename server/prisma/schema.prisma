@@ -22,6 +22,18 @@ model User {
   wishlist  Product[]
 }
 
+model Admin {
+  id        String   @id @default(uuid())
+  firstname String
+  lastname  String
+  email     String   @unique
+  mobile    String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
 model Product {
   id     Int     @id @default(autoincrement())
   User   User?   @relation(fields: [userId], references: [id])
