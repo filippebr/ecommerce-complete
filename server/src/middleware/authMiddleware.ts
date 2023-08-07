@@ -24,3 +24,12 @@ export async function authMiddleware(
     reply.send({ message: 'There is no token attached to header' })
   }
 }
+
+export async function isAdmin(request: any, reply: FastifyReply) {
+  const role = request.body.id.role
+  if (role !== 'admin') {
+    return reply.send({
+      message: `The role '${role}' is not authorized to this action`,
+    })
+  }
+}

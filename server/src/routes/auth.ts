@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
-import { authMiddleware } from '../middleware/authMiddleware'
+import { authMiddleware, isAdmin } from '../middleware/authMiddleware'
 import BcryptService from '../services/bcryptService'
 import userSchema from '../services/userSchema'
 
@@ -13,18 +13,19 @@ interface UserParams {
 export async function authRoutes(app: FastifyInstance) {
   app.get(
     '/user/:id',
-    { preHandler: [authMiddleware] },
+    { preHandler: [authMiddleware, isAdmin] },
     async (request: any, reply: FastifyReply) => {
       try {
         const { id } = request.params
+        // const { token } = request.headers[1]
+
+        // console.log(request.headers.authorization.split(' ')[1])
 
         const user = await prisma.user.findUnique({
           where: {
             id,
           },
         })
-
-        console.log(request.params)
 
         return reply.send({ user })
       } catch (error) {
@@ -113,12 +114,6 @@ export async function authRoutes(app: FastifyInstance) {
         return reply
           .code(409)
           .send({ message: 'Invalid password', success: false })
-    }
-
-    if (user?.role !== 'admin') {
-      return reply
-        .code(401)
-        .send({ message: `Not authorized as ${user?.role}` })
     }
 
     if (!user)
