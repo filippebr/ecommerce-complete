@@ -1,5 +1,7 @@
 import z from 'zod'
 
+const validRoles = ['admin', 'user']
+
 const userSchema = z.object({
   firstname: z
     .string({
@@ -20,7 +22,12 @@ const userSchema = z.object({
       required_error: 'Email is required',
     })
     .email({ message: 'Invalid email address' }),
-  role: z.string().nonempty(),
+  role: z
+    .string()
+    .nonempty()
+    .refine((value) => validRoles.includes(value), {
+      message: 'Invalid role value',
+    }),
   address: z.string().optional(),
 })
 

@@ -24,6 +24,8 @@ export async function authRoutes(app: FastifyInstance) {
           },
         })
 
+        console.log(request.params)
+
         return reply.send({ user })
       } catch (error) {
         return reply.send(error)
@@ -45,11 +47,11 @@ export async function authRoutes(app: FastifyInstance) {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
 
-      if (userInfo.role !== 'admin' && userInfo.role !== 'user')
-        return reply.code(409).send({
-          message: `The database do not accept '${userInfo.role}' role`,
-          success: false,
-        })
+      // if (userInfo.role !== 'admin' && userInfo.role !== 'user')
+      //   return reply.code(409).send({
+      //     message: `The database do not accept '${userInfo.role}' role`,
+      //     success: false,
+      //   })
 
       let user = await prisma.user.findUnique({
         where: {
@@ -111,6 +113,12 @@ export async function authRoutes(app: FastifyInstance) {
         return reply
           .code(409)
           .send({ message: 'Invalid password', success: false })
+    }
+
+    if (user?.role !== 'admin') {
+      return reply
+        .code(401)
+        .send({ message: `Not authorized as ${user?.role}` })
     }
 
     if (!user)
