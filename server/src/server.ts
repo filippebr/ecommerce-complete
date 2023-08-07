@@ -1,5 +1,4 @@
 import fastify from 'fastify'
-// import authMiddleware from './middleware/authMiddleware'
 import { errorHandler } from './middleware/errorHandler'
 import { authRoutes } from './routes/auth'
 

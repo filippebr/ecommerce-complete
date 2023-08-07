@@ -17,9 +17,6 @@ export async function authRoutes(app: FastifyInstance) {
     async (request: any, reply: FastifyReply) => {
       try {
         const { id } = request.params
-        // const { token } = request.headers[1]
-
-        // console.log(request.headers.authorization.split(' ')[1])
 
         const user = await prisma.user.findUnique({
           where: {
@@ -47,12 +44,6 @@ export async function authRoutes(app: FastifyInstance) {
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
-
-      // if (userInfo.role !== 'admin' && userInfo.role !== 'user')
-      //   return reply.code(409).send({
-      //     message: `The database do not accept '${userInfo.role}' role`,
-      //     success: false,
-      //   })
 
       let user = await prisma.user.findUnique({
         where: {
