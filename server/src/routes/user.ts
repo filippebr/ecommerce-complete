@@ -187,7 +187,7 @@ export async function userRoutes(app: FastifyInstance) {
       const { id } = request.params
 
       try {
-        const user = await prisma.user.update({
+        const block = await prisma.user.update({
           where: {
             id,
           },
@@ -196,7 +196,32 @@ export async function userRoutes(app: FastifyInstance) {
           },
         })
 
-        return reply.send({ message: 'User updated succesfully', user })
+        return reply.send({ message: 'User blocked succesfully', block })
+      } catch (error) {
+        return reply.send({ message: 'User not found', success: false })
+      }
+    },
+  )
+
+  app.put(
+    '/unblock-user/:id',
+    async (
+      request: FastifyRequest<{ Params: UserParams }>,
+      reply: FastifyReply,
+    ) => {
+      const { id } = request.params
+
+      try {
+        const unblock = await prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            isBlocked: false,
+          },
+        })
+
+        return reply.send({ message: 'User unblock succesfully', unblock })
       } catch (error) {
         return reply.send({ message: 'User not found', success: false })
       }
