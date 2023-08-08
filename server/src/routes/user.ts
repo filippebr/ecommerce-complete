@@ -1,4 +1,9 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  RouteHandlerMethod,
+} from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
@@ -178,53 +183,74 @@ export async function userRoutes(app: FastifyInstance) {
     },
   )
 
-  app.put(
-    '/block-user/:id',
-    async (
-      request: FastifyRequest<{ Params: UserParams }>,
-      reply: FastifyReply,
-    ) => {
-      const { id } = request.params
+  const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
+    const { id } = request.params as { id: string }
 
-      try {
-        const block = await prisma.user.update({
-          where: {
-            id,
-          },
-          data: {
-            isBlocked: true,
-          },
-        })
+    try {
+      const block = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isBlocked: true,
+        },
+      })
 
-        return reply.send({ message: 'User blocked succesfully', block })
-      } catch (error) {
-        return reply.send({ message: 'User not found', success: false })
-      }
-    },
-  )
+      return reply.send({ message: 'User blocked successfully', block })
+    } catch (error) {
+      return reply.send({ message: 'User not found', success: false })
+    }
+  }
+
+  app.put('/block-user/:id', { preHandler: [authMiddleware] }, blockUserHandler)
+
+  // app.put(
+  //   '/block-user/:id',
+  //   async (
+  //     request: FastifyRequest<{ Params: UserParams }>,
+  //     reply: FastifyReply,
+  //   ) => {
+  //     const { id } = request.params
+
+  //     try {
+  //       const block = await prisma.user.update({
+  //         where: {
+  //           id,
+  //         },
+  //         data: {
+  //           isBlocked: true,
+  //         },
+  //       })
+
+  //       return reply.send({ message: 'User blocked succesfully', block })
+  //     } catch (error) {
+  //       return reply.send({ message: 'User not found', success: false })
+  //     }
+  //   },
+  // )
+
+  const unblockUserHandler: RouteHandlerMethod = async (request, reply) => {
+    const { id } = request.params as { id: string }
+
+    try {
+      const unblock = await prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isBlocked: false,
+        },
+      })
+
+      return reply.send({ message: 'User unblocked successfully', unblock })
+    } catch (error) {
+      return reply.send({ message: 'User not found', success: false })
+    }
+  }
 
   app.put(
     '/unblock-user/:id',
-    async (
-      request: FastifyRequest<{ Params: UserParams }>,
-      reply: FastifyReply,
-    ) => {
-      const { id } = request.params
-
-      try {
-        const unblock = await prisma.user.update({
-          where: {
-            id,
-          },
-          data: {
-            isBlocked: false,
-          },
-        })
-
-        return reply.send({ message: 'User unblocked succesfully', unblock })
-      } catch (error) {
-        return reply.send({ message: 'User not found', success: false })
-      }
-    },
+    { preHandler: [authMiddleware] },
+    unblockUserHandler,
   )
 }

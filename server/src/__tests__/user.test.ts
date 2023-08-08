@@ -253,16 +253,25 @@ describe('Authentication tests', () => {
 
     const id = user?.id
 
+    const token = jwt.sign(
+      { userId: user?.id },
+      process.env.JWT_SECRET as Secret,
+      {
+        expiresIn: '1h',
+      },
+    )
+
     const updateUserResponse = await request(app.server)
       .put(`/api/user/block-user/${id}`)
       .send({
         isBlocked: true,
       })
+      .set('Authorization', `Bearer ${token}`)
 
     console.log(updateUserResponse.body)
 
     expect(updateUserResponse.status).toBe(200)
-    expect(updateUserResponse.body.message).toEqual('User blocked succesfully')
+    expect(updateUserResponse.body.message).toEqual('User blocked successfully')
     expect(updateUserResponse.body.block.isBlocked).toEqual(true)
   })
 
@@ -275,17 +284,24 @@ describe('Authentication tests', () => {
 
     const id = user?.id
 
+    const token = jwt.sign(
+      { userId: user?.id },
+      process.env.JWT_SECRET as Secret,
+      {
+        expiresIn: '1h',
+      },
+    )
+
     const updateUserResponse = await request(app.server)
       .put(`/api/user/unblock-user/${id}`)
       .send({
         isBlocked: false,
       })
-
-    console.log(updateUserResponse.body)
+      .set('Authorization', `Bearer ${token}`)
 
     expect(updateUserResponse.status).toBe(200)
     expect(updateUserResponse.body.message).toEqual(
-      'User unblocked succesfully',
+      'User unblocked successfully',
     )
     expect(updateUserResponse.body.unblock.isBlocked).toEqual(false)
   })
