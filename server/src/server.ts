@@ -6,7 +6,7 @@ const server = fastify()
 
 server.setErrorHandler(errorHandler)
 
-server.register(userRoutes)
+server.register(userRoutes, { prefix: 'api/user' })
 
 const PORT = 3333
 

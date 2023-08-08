@@ -34,14 +34,14 @@ describe('Authentication tests', () => {
   })
 
   test('should return all users', async () => {
-    const response = await request(app.server).get('/users')
+    const response = await request(app.server).get('/api/user/all')
 
     expect(response.statusCode).toEqual(200)
     expect(response.text.length).toBeGreaterThan(0)
   })
 
   test('should create a user', async () => {
-    const response = await request(app.server).post('/user/register').send({
+    const response = await request(app.server).post('/api/user/register').send({
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
@@ -62,7 +62,7 @@ describe('Authentication tests', () => {
   })
 
   test('should not create a new user with an existing email', async () => {
-    const response = await request(app.server).post('/user/register').send({
+    const response = await request(app.server).post('/api/user/register').send({
       firstname: 'John',
       lastname: 'Doe',
       email: 'doe@email.com',
@@ -79,7 +79,7 @@ describe('Authentication tests', () => {
   })
 
   test('should login an existing user', async () => {
-    const response = await request(app.server).post('/users/login').send({
+    const response = await request(app.server).post('/api/user/login').send({
       email: 'doe@email.com',
       password: '12345678',
     })
@@ -96,7 +96,7 @@ describe('Authentication tests', () => {
   })
 
   test('should not login a non-existing user', async () => {
-    const response = await request(app.server).post('/users/login').send({
+    const response = await request(app.server).post('/api/user/login').send({
       email: 'jane.doe@email.com',
       password: '12345678',
     })
@@ -107,7 +107,7 @@ describe('Authentication tests', () => {
   })
 
   test('should not login a user with invalid data', async () => {
-    const response = await request(app.server).post('/users/login').send({
+    const response = await request(app.server).post('/api/user/login').send({
       email: 'not a valid email',
       password: '',
     })
@@ -122,7 +122,7 @@ describe('Authentication tests', () => {
   })
 
   test('should not login a user with invalid credentials', async () => {
-    const response = await request(app.server).post('/users/login').send({
+    const response = await request(app.server).post('/api/user/login').send({
       email: 'doe@email.com',
       password: 'wrong password',
     })
@@ -149,7 +149,7 @@ describe('Authentication tests', () => {
     )
 
     const response = await request(app.server)
-      .get(`/user/${user?.id}`)
+      .get(`/api/user/${user?.id}`)
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.statusCode).toEqual(200)
@@ -177,7 +177,7 @@ describe('Authentication tests', () => {
     )
 
     const response = await request(app.server)
-      .get(`/user/:00000`)
+      .get(`/api/user/:00000`)
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.body.user).toEqual(null)
@@ -186,7 +186,7 @@ describe('Authentication tests', () => {
   test('should create and delete a user', async () => {
     // Create a new user
     const createUserResponse = await request(app.server)
-      .post('/user/register')
+      .post('/api/user/register')
       .send({
         firstname: 'Jose',
         lastname: 'Doe',
@@ -204,7 +204,9 @@ describe('Authentication tests', () => {
     const { id } = createUserResponse.body.createdUser
 
     // Delete the user
-    const deleteUserResponse = await request(app.server).delete(`/user/${id}`)
+    const deleteUserResponse = await request(app.server).delete(
+      `/api/user/${id}`,
+    )
 
     expect(deleteUserResponse.status).toBe(200)
     expect(deleteUserResponse.body).toHaveProperty(
@@ -223,7 +225,7 @@ describe('Authentication tests', () => {
     const id = user?.id
 
     const updateUserResponse = await request(app.server)
-      .put(`/user/${id}`)
+      .put(`/api/user/${id}`)
       .send({
         firstname: 'Jon',
         lastname: 'Do',

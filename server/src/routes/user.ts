@@ -12,7 +12,7 @@ interface UserParams {
 
 export async function userRoutes(app: FastifyInstance) {
   app.get(
-    '/user/:id',
+    '/:id',
     { preHandler: [authMiddleware] },
     async (request: any, reply: FastifyReply) => {
       try {
@@ -31,7 +31,7 @@ export async function userRoutes(app: FastifyInstance) {
     },
   )
 
-  app.get('/users', async (request, reply) => {
+  app.get('/all', async (request, reply) => {
     try {
       const users = await prisma.user.findMany()
       reply.send({ users })
@@ -40,7 +40,7 @@ export async function userRoutes(app: FastifyInstance) {
     }
   })
 
-  app.post('/user/register', async (request, reply) => {
+  app.post('/register', async (request, reply) => {
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
@@ -77,7 +77,7 @@ export async function userRoutes(app: FastifyInstance) {
     }
   })
 
-  app.post('/users/login', async (request, reply) => {
+  app.post('/login', async (request, reply) => {
     const userSchema = z.object({
       password: z.string().min(6),
       email: z
@@ -125,7 +125,7 @@ export async function userRoutes(app: FastifyInstance) {
   })
 
   app.delete(
-    '/user/:id',
+    '/:id',
     async (
       request: FastifyRequest<{ Params: UserParams }>,
       reply: FastifyReply,
@@ -147,7 +147,7 @@ export async function userRoutes(app: FastifyInstance) {
   )
 
   app.put(
-    '/user/:id',
+    '/:id',
     async (
       request: FastifyRequest<{ Params: UserParams }>,
       reply: FastifyReply,
