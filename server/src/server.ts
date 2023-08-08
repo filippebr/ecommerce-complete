@@ -1,3 +1,4 @@
+import jwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
 import { userRoutes } from './routes/user'
@@ -5,6 +6,10 @@ import { userRoutes } from './routes/user'
 const server = fastify()
 
 server.setErrorHandler(errorHandler)
+
+server.register(jwt, {
+  secret: 'ecommerce',
+})
 
 server.register(userRoutes, { prefix: 'api/user' })
 
