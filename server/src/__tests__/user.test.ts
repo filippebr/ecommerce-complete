@@ -49,7 +49,10 @@ describe('Authentication tests', () => {
       password: '12345678',
       role: 'admin',
       address: 'Rua John Doe, 123',
+      // isBlocked: false,
     })
+
+    console.log(response)
 
     expect(response.status).toBe(200)
     expect(response.body.createdUser).toHaveProperty('id')
@@ -241,5 +244,24 @@ describe('Authentication tests', () => {
     expect(updateUserResponse.body.user.firstname).toEqual('Jon')
     expect(updateUserResponse.body.user.lastname).toEqual('Do')
     expect(updateUserResponse.body.user.mobile).toEqual('9999999997')
+  })
+
+  test('should block a already created user', async () => {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: 'doe@email.com',
+      },
+    })
+
+    const id = user?.id
+
+    const updateUserResponse = await request(app.server)
+      .put(`/api/user/block-user/${id}`)
+      .send({
+        isBlocked: true,
+      })
+
+    expect(updateUserResponse.status).toBe(200)
+    expect(updateUserResponse.body.message).toEqual('User blocked succesfully')
   })
 })

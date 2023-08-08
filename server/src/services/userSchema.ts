@@ -30,7 +30,7 @@ const userSchema = z.object({
     .refine((value) => validRoles.includes(value), {
       message: 'Invalid role value',
     }),
-  isBlocked: z.boolean(),
+  isBlocked: z.boolean().optional(),
   address: z.string().optional(),
   cart: z.array(cartSchema).optional(), // Add cart validation
   wishlist: z.array(productSchema).optional(), // Add wishlist validation
