@@ -15,7 +15,7 @@ model User {
   mobile    String    @unique
   password  String
   role      String    @default("user")
-  isBlocked Boolean
+  isBlocked Boolean   @default(false)
   cart      Cart[]
   address   String?
   wishlist  Product[]
