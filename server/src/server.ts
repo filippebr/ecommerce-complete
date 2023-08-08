@@ -1,12 +1,12 @@
 import fastify from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
-import { authRoutes } from './routes/auth'
+import { userRoutes } from './routes/user'
 
 const server = fastify()
 
 server.setErrorHandler(errorHandler)
 
-server.register(authRoutes)
+server.register(userRoutes)
 
 const PORT = 3333
 

@@ -10,7 +10,7 @@ interface UserParams {
   id: string
 }
 
-export async function authRoutes(app: FastifyInstance) {
+export async function userRoutes(app: FastifyInstance) {
   app.get(
     '/user/:id',
     { preHandler: [authMiddleware, isAdmin] },
