@@ -221,7 +221,7 @@ export async function userRoutes(app: FastifyInstance) {
           },
         })
 
-        return reply.send({ message: 'User unblock succesfully', unblock })
+        return reply.send({ message: 'User unblocked succesfully', unblock })
       } catch (error) {
         return reply.send({ message: 'User not found', success: false })
       }
