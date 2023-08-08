@@ -8,6 +8,8 @@ describe('Authentication tests', () => {
   afterAll(() => app.close())
 
   beforeAll(async () => {
+    await app.ready()
+
     const user = await prisma.user.findUnique({
       where: {
         email: 'doe@email.com',
@@ -32,8 +34,6 @@ describe('Authentication tests', () => {
   })
 
   test('should return all users', async () => {
-    await app.ready()
-
     const response = await request(app.server).get('/users')
 
     expect(response.statusCode).toEqual(200)
@@ -41,8 +41,6 @@ describe('Authentication tests', () => {
   })
 
   test('should create a user', async () => {
-    await app.ready()
-
     const response = await request(app.server).post('/user/register').send({
       firstname: 'John',
       lastname: 'Doe',
@@ -70,7 +68,7 @@ describe('Authentication tests', () => {
       email: 'doe@email.com',
       mobile: '999999992',
       password: '12345678',
-      role: 'user',
+      role: 'admin',
       address: 'Rua John Doe, 123',
     })
 
@@ -136,8 +134,6 @@ describe('Authentication tests', () => {
   })
 
   test('should return a user', async () => {
-    await app.ready()
-
     const user = await prisma.user.findUnique({
       where: {
         email: 'doe@email.com',
@@ -166,8 +162,6 @@ describe('Authentication tests', () => {
   })
 
   test('should not return a user', async () => {
-    await app.ready()
-
     const user = await prisma.user.findUnique({
       where: {
         email: 'doe@email.com',
@@ -190,8 +184,6 @@ describe('Authentication tests', () => {
   })
 
   test('should create and delete a user', async () => {
-    await app.ready()
-
     // Create a new user
     const createUserResponse = await request(app.server)
       .post('/user/register')
@@ -222,8 +214,6 @@ describe('Authentication tests', () => {
   })
 
   test('should update a already created user', async () => {
-    await app.ready()
-
     const user = await prisma.user.findUnique({
       where: {
         email: 'doe@email.com',

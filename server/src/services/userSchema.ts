@@ -1,4 +1,6 @@
 import z from 'zod'
+import cartSchema from './cartSchema'
+import productSchema from './productSchema'
 
 const validRoles = ['admin', 'user']
 
@@ -29,6 +31,8 @@ const userSchema = z.object({
       message: 'Invalid role value',
     }),
   address: z.string().optional(),
+  cart: z.array(cartSchema).optional(), // Add cart validation
+  wishlist: z.array(productSchema).optional(), // Add wishlist validation
 })
 
 export default userSchema

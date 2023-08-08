@@ -25,11 +25,11 @@ export async function authMiddleware(
   }
 }
 
-export async function isAdmin(request: any, reply: FastifyReply) {
-  const role = request.body.id.role
-  if (role !== 'admin') {
-    return reply.send({
-      message: `The role '${role}' is not authorized to this action`,
-    })
-  }
-}
+// export async function isAdmin(request: any, reply: FastifyReply) {
+//   const role = request.body.id.role
+//   if (role !== 'admin') {
+//     return reply.send({
+//       message: `The role '${role}' is not authorized to this action`,
+//     })
+//   }
+// }
