@@ -1,6 +1,6 @@
-import jwt, { Secret } from 'jsonwebtoken'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
+import generateJsonWebToken from '../config/jwtToken'
 import { prisma } from '../lib/prisma'
 import app from '../server'
 
@@ -49,7 +49,6 @@ describe('Authentication tests', () => {
       password: '12345678',
       role: 'admin',
       address: 'Rua John Doe, 123',
-      // isBlocked: false,
     })
 
     expect(response.status).toBe(200)
@@ -141,13 +140,7 @@ describe('Authentication tests', () => {
       },
     })
 
-    const token = jwt.sign(
-      { userId: user?.id },
-      process.env.JWT_SECRET as Secret,
-      {
-        expiresIn: '1h',
-      },
-    )
+    const token = user ? generateJsonWebToken(user) : null
 
     const response = await request(app.server)
       .get(`/api/user/${user?.id}`)
@@ -169,13 +162,7 @@ describe('Authentication tests', () => {
       },
     })
 
-    const token = jwt.sign(
-      { userId: user?.id },
-      process.env.JWT_SECRET as Secret,
-      {
-        expiresIn: '1h', // Set the token expiry time according to your application's requirements
-      },
-    )
+    const token = user ? generateJsonWebToken(user) : null
 
     const response = await request(app.server)
       .get(`/api/user/:00000`)
@@ -253,13 +240,7 @@ describe('Authentication tests', () => {
 
     const id = user?.id
 
-    const token = jwt.sign(
-      { userId: user?.id },
-      process.env.JWT_SECRET as Secret,
-      {
-        expiresIn: '1h',
-      },
-    )
+    const token = user ? generateJsonWebToken(user) : null
 
     const updateUserResponse = await request(app.server)
       .put(`/api/user/block-user/${id}`)
@@ -284,13 +265,7 @@ describe('Authentication tests', () => {
 
     const id = user?.id
 
-    const token = jwt.sign(
-      { userId: user?.id },
-      process.env.JWT_SECRET as Secret,
-      {
-        expiresIn: '1h',
-      },
-    )
+    const token = user ? generateJsonWebToken(user) : null
 
     const updateUserResponse = await request(app.server)
       .put(`/api/user/unblock-user/${id}`)
