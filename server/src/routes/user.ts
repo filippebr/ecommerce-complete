@@ -154,8 +154,6 @@ export async function userRoutes(app: FastifyInstance) {
   const updateUser: RouteHandlerMethod = async (request, reply) => {
     const { id } = request.params as { id: string }
 
-    console.log(request)
-
     try {
       const userInfo = userSchema.parse(request.body)
 
@@ -179,7 +177,7 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }
 
-  app.put('/:id', updateUser)
+  app.put('/:id', { preHandler: [authMiddleware] }, updateUser)
 
   const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
     const { id } = request.params as { id: string }
