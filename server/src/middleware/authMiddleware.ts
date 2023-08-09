@@ -17,6 +17,8 @@ export async function authMiddleware(
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret)
     request.body = decodedToken
+
+    console.log(request.body)
   } catch (error) {
     reply.send({
       message: 'Not authorized: token expired or invalid. Please log in again',
