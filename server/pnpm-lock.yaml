@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fastify/cookie':
+    specifier: ^9.0.4
+    version: 9.0.4
   '@fastify/jwt':
     specifier: 7.2.0
     version: 7.2.0
@@ -20,9 +23,6 @@ dependencies:
   fastify:
     specifier: ^4.19.0
     version: 4.19.0
-  fastify-cookie:
-    specifier: ^5.7.0
-    version: 5.7.0
   jsonwebtoken:
     specifier: ^9.0.1
     version: 9.0.1
@@ -338,6 +338,13 @@ packages:
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
       fast-uri: 2.2.0
+    dev: false
+
+  /@fastify/cookie@9.0.4:
+    resolution: {integrity: sha512-behLOTH2u7fSZ6+TWeW8XUCmpEstwl8ysxzyb4QRxnKyt80O2S4yVfNbBZQcG9rktjeZXfR7LLl9xXKL4vdjlQ==}
+    dependencies:
+      cookie: 0.5.0
+      fastify-plugin: 4.5.1
     dev: false
 
   /@fastify/deepmerge@1.3.0:
@@ -1085,11 +1092,6 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: false
 
-  /cookie-signature@1.2.1:
-    resolution: {integrity: sha512-78KWk9T26NhzXtuL26cIJ8/qNHANyJ/ZYrmEXFzUmhZdjpBv+DlWlOANRTGBt48YcyslsLrj0bMLFTmXvLRCOw==}
-    engines: {node: '>=6.6.0'}
-    dev: false
-
   /cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
@@ -1755,24 +1757,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       reusify: 1.0.4
-    dev: false
-
-  /fastify-cookie@5.6.1:
-    resolution: {integrity: sha512-qKFxDOLkrXn2TkxlO/+cK0tWYCTSrJDmuwty6Zl7kD5FtALwcjUHPFzOdR1Gxupb5oWhvbpSHBMx2XS+t9fbQQ==}
-    dependencies:
-      cookie-signature: 1.2.1
-      fastify-plugin: 3.0.1
-    dev: false
-
-  /fastify-cookie@5.7.0:
-    resolution: {integrity: sha512-l9UDkHysfOBdyA2rNkr1DQqe6xFdT3NuT60W+o7ramvuyyIc9kv6VmrhpLeEx29EftVJR9lRpW4Pg8T+RDNBLw==}
-    dependencies:
-      fastify-cookie-deprecated: /fastify-cookie@5.6.1
-      process-warning: 1.0.0
-    dev: false
-
-  /fastify-plugin@3.0.1:
-    resolution: {integrity: sha512-qKcDXmuZadJqdTm6vlCqioEbyewF60b/0LOFCcYN1B6BIZGlYJumWWOYs70SFYLDAH4YqdE1cxH/RKMG7rFxgA==}
     dev: false
 
   /fastify-plugin@4.5.1:
@@ -2794,10 +2778,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 5.1.1
-
-  /process-warning@1.0.0:
-    resolution: {integrity: sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==}
-    dev: false
 
   /process-warning@2.2.0:
     resolution: {integrity: sha512-/1WZ8+VQjR6avWOgHeEPd7SDQmFQ1B5mC1eRXsCm5TarlNmx/wCsa5GEaxGm05BORRtyG/Ex/3xq3TuRvq57qg==}

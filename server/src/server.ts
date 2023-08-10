@@ -1,3 +1,5 @@
+import type { FastifyCookieOptions } from '@fastify/cookie'
+import cookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
@@ -10,6 +12,12 @@ server.setErrorHandler(errorHandler)
 server.register(jwt, {
   secret: 'ecommerce',
 })
+
+server.register(cookie, {
+  secret: 'cookieecommerce',
+  hook: 'onRequest',
+  parseOptions: {},
+} as FastifyCookieOptions)
 
 server.register(userRoutes, { prefix: 'api/user' })
 
