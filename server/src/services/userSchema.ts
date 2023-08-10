@@ -32,8 +32,8 @@ const userSchema = z.object({
     }),
   isBlocked: z.boolean().optional(),
   address: z.string().optional(),
-  cart: z.array(cartSchema).optional(), // Add cart validation
-  wishlist: z.array(productSchema).optional(), // Add wishlist validation
+  cart: z.array(cartSchema).optional(),
+  wishlist: z.array(productSchema).optional(),
 })
 
 export default userSchema

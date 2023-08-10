@@ -8,19 +8,20 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  firstname String
-  lastname  String
-  email     String    @unique
-  mobile    String    @unique
-  password  String
-  role      String    @default("user")
-  isBlocked Boolean   @default(false)
-  cart      Cart[]
-  address   String?
-  wishlist  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  id           String    @id @default(uuid())
+  firstname    String
+  lastname     String
+  email        String    @unique
+  mobile       String    @unique
+  password     String
+  role         String    @default("user")
+  isBlocked    Boolean   @default(false)
+  cart         Cart[]
+  address      String?
+  wishlist     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  refreshToken String?
 }
 
 model Product {
