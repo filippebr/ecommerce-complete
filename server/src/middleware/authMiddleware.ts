@@ -1,28 +1,43 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import jwt, { Secret } from 'jsonwebtoken'
+import { JwtPayload } from 'jsonwebtoken'
+import { validateAccessToken } from '../config/jwtToken'
 
 export async function authMiddleware(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const authorizationHeader = request.headers.authorization
-
-  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer')) {
-    reply.send({ message: 'No valid token attached to the header' })
-    return
-  }
-
-  const token = authorizationHeader.split(' ')[1]
-
-  try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret)
-    request.body = decodedToken
-
-    console.log(request.body)
-  } catch (error) {
+  const unauthorizedError = () => {
+    reply.statusCode = 401
     reply.send({
       message: 'Not authorized: token expired or invalid. Please log in again',
     })
+  }
+
+  try {
+    const authorizationHeader = request.headers.authorization
+
+    if (!authorizationHeader) {
+      unauthorizedError()
+      return
+    }
+
+    const accessToken = authorizationHeader?.split(' ')[1]
+
+    if (!accessToken) {
+      unauthorizedError()
+      return
+    }
+
+    const userData = validateAccessToken(accessToken as string)
+
+    if (!userData) {
+      unauthorizedError()
+      return
+    }
+
+    request.user = userData as JwtPayload
+  } catch (e) {
+    unauthorizedError()
   }
 }
 

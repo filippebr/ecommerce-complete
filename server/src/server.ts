@@ -14,7 +14,7 @@ server.register(jwt, {
 })
 
 server.register(cookie, {
-  secret: 'cookieecommerce',
+  secret: 'my-secret',
   hook: 'onRequest',
   parseOptions: {},
 } as FastifyCookieOptions)

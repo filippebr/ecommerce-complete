@@ -16,6 +16,26 @@ interface UserParams {
 }
 
 export async function userRoutes(app: FastifyInstance) {
+  app.get('/', (request: FastifyRequest, reply: FastifyReply) => {
+    const aCookieValue = request.cookies.cookieName
+    console.log('aCookieValue: ', aCookieValue)
+    // `reply.unsignCookie()` is also available
+    const cookieSignedValue = request.cookies.cookieSigned as string
+    const bCookie = request.unsignCookie(cookieSignedValue)
+    console.log('bCookie: ', bCookie)
+    reply
+      .setCookie('foo', 'foo', {
+        domain: 'example.com',
+        path: '/',
+      })
+      .cookie('baz', 'baz') // alias for setCookie
+      .setCookie('bar', 'bar', {
+        path: '/',
+        signed: true,
+      })
+      .send({ hello: 'world' })
+  })
+
   app.get(
     '/:id',
     { preHandler: [authMiddleware] },
