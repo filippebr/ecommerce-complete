@@ -1,7 +1,7 @@
 import type { FastifyCookieOptions } from '@fastify/cookie'
 import cookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
-import fastify from 'fastify'
+import fastify, { FastifyRequest } from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
 import { userRoutes } from './routes/user'
 
@@ -19,9 +19,8 @@ server.register(cookie, {
   parseOptions: {},
 } as FastifyCookieOptions)
 
-server.register(require('@fastify/csrf'), {
-  sessionPlugin: 'fastify-cookie',
-  cookieOpts: { signed: true },
+server.register(require('@fastify/csrf-protection'), {
+  getToken: (request: FastifyRequest) => request.headers['csrf-token'],
 })
 
 server.register(userRoutes, { prefix: 'api/user' })
