@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@fastify/cookie": "^9.0.4",
+    "@fastify/csrf": "^6.2.0",
     "@fastify/jwt": "7.2.0",
     "@prisma/client": "5.1.1",
     "@types/bcrypt": "^5.0.0",

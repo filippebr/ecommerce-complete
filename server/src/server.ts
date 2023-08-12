@@ -19,6 +19,11 @@ server.register(cookie, {
   parseOptions: {},
 } as FastifyCookieOptions)
 
+server.register(require('@fastify/csrf'), {
+  sessionPlugin: 'fastify-cookie',
+  cookieOpts: { signed: true },
+})
+
 server.register(userRoutes, { prefix: 'api/user' })
 
 const PORT = 3333
