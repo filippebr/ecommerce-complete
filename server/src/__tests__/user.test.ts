@@ -249,8 +249,6 @@ describe('Authentication tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
 
-    console.log(updateUserResponse.body)
-
     expect(updateUserResponse.status).toBe(200)
     expect(updateUserResponse.body.message).toEqual('User blocked successfully')
     expect(updateUserResponse.body.block.isBlocked).toEqual(true)

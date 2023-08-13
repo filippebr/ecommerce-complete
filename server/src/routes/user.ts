@@ -16,56 +16,61 @@ interface UserParams {
 }
 
 export async function userRoutes(app: FastifyInstance) {
-  app.get('/', (request: FastifyRequest, reply: FastifyReply) => {
-    const aCookieValue = request.cookies.cookieName
-    console.log('aCookieValue: ', aCookieValue)
-    // `reply.unsignCookie()` is also available
-    const cookieSignedValue = request.cookies.cookieSigned as string
-    const bCookie = request.unsignCookie(cookieSignedValue)
-    console.log('bCookie: ', bCookie)
-    reply
-      .setCookie('foo', 'foo', {
-        domain: 'example.com',
-        path: '/',
+  // app.get('/', (request: FastifyRequest, reply: FastifyReply) => {
+  //   const aCookieValue = request.cookies.cookieName
+  //   console.log('aCookieValue: ', aCookieValue)
+  //   // `reply.unsignCookie()` is also available
+  //   const cookieSignedValue = request.cookies.cookieSigned as string
+  //   const bCookie = request.unsignCookie(cookieSignedValue)
+  //   console.log('bCookie: ', bCookie)
+  //   reply
+  //     .setCookie('foo', 'foo', {
+  //       domain: 'example.com',
+  //       path: '/',
+  //     })
+  //     .cookie('baz', 'baz') // alias for setCookie
+  //     .setCookie('bar', 'bar', {
+  //       path: '/',
+  //       signed: true,
+  //     })
+  //     .send({ hello: 'world' })
+  // })
+
+  const getUser: RouteHandlerMethod = async (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
+    try {
+      const { id } = request.params as UserParams
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
       })
-      .cookie('baz', 'baz') // alias for setCookie
-      .setCookie('bar', 'bar', {
-        path: '/',
-        signed: true,
-      })
-      .send({ hello: 'world' })
-  })
 
-  app.get(
-    '/:id',
-    { preHandler: [authMiddleware] },
-    async (request: any, reply: FastifyReply) => {
-      try {
-        const { id } = request.params
+      return reply.send({ user })
+    } catch (error) {
+      return reply.send(error)
+    }
+  }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            id,
-          },
-        })
-
-        return reply.send({ user })
-      } catch (error) {
-        return reply.send(error)
-      }
-    },
-  )
-
-  app.get('/all', async (request, reply) => {
+  const getUsers: RouteHandlerMethod = async (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
     try {
       const users = await prisma.user.findMany()
       reply.send({ users })
     } catch (error) {
       reply.send(error)
     }
-  })
+  }
 
-  app.post('/register', async (request, reply) => {
+  const registerUser: RouteHandlerMethod = async (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
     try {
       const userInfo = userSchema.parse(request.body)
       const passwordHashed = BcryptService.hashPassword(userInfo.password)
@@ -100,9 +105,12 @@ export async function userRoutes(app: FastifyInstance) {
     } catch (error) {
       reply.send({ message: error })
     }
-  })
+  }
 
-  app.post('/login', async (request, reply) => {
+  const loginUser: RouteHandlerMethod = async (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
     const userSchema = z.object({
       password: z.string().min(6),
       email: z
@@ -147,32 +155,29 @@ export async function userRoutes(app: FastifyInstance) {
       updatedAt: user?.updatedAt,
       token: generateJsonWebToken(user),
     })
-  })
+  }
 
-  app.delete(
-    '/:id',
-    async (
-      request: FastifyRequest<{ Params: UserParams }>,
-      reply: FastifyReply,
-    ) => {
-      try {
-        const { id } = request.params
+  const deleteUser: RouteHandlerMethod = async (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
+    try {
+      const { id } = request.params as UserParams
 
-        const user = await prisma.user.delete({
-          where: {
-            id,
-          },
-        })
+      const user = await prisma.user.delete({
+        where: {
+          id,
+        },
+      })
 
-        return reply.send({ message: 'User deleted successfully', user })
-      } catch (error) {
-        return reply.send({ message: 'User not found', success: false })
-      }
-    },
-  )
+      return reply.send({ message: 'User deleted successfully', user })
+    } catch (error) {
+      return reply.send({ message: 'User not found', success: false })
+    }
+  }
 
   const updateUser: RouteHandlerMethod = async (request, reply) => {
-    const { id } = request.params as { id: string }
+    const { id } = request.params as UserParams
 
     try {
       const userInfo = userSchema.parse(request.body)
@@ -197,10 +202,8 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }
 
-  app.put('/:id', updateUser)
-
   const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
-    const { id } = request.params as { id: string }
+    const { id } = request.params as UserParams
 
     try {
       const block = await prisma.user.update({
@@ -218,10 +221,8 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }
 
-  app.put('/block-user/:id', { preHandler: [authMiddleware] }, blockUserHandler)
-
   const unblockUserHandler: RouteHandlerMethod = async (request, reply) => {
-    const { id } = request.params as { id: string }
+    const { id } = request.params as UserParams
 
     try {
       const unblock = await prisma.user.update({
@@ -239,6 +240,13 @@ export async function userRoutes(app: FastifyInstance) {
     }
   }
 
+  app.get('/:id', getUser)
+  app.get('/all', getUsers)
+  app.post('/register', registerUser)
+  app.post('/login', loginUser)
+  app.delete('/:id', deleteUser)
+  app.put('/:id', updateUser)
+  app.put('/block-user/:id', { preHandler: [authMiddleware] }, blockUserHandler)
   app.put(
     '/unblock-user/:id',
     { preHandler: [authMiddleware] },
