@@ -3,7 +3,7 @@ import cookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
 import fastify, { FastifyRequest } from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
-import { userRoutes } from './routes/user'
+import { userRoutes } from './routes/userRoute'
 
 const server = fastify()
 
