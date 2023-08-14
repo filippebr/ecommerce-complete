@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { JwtPayload } from 'jsonwebtoken'
 import { validateAccessToken } from '../config/jwtToken'
+import { prisma } from '../lib/prisma'
 
 export async function authMiddleware(
   request: FastifyRequest,
@@ -41,11 +42,20 @@ export async function authMiddleware(
   }
 }
 
-// export async function isAdmin(request: any, reply: FastifyReply) {
-//   const role = request.body.id.role
-//   if (role !== 'admin') {
-//     return reply.send({
-//       message: `The role '${role}' is not authorized to this action`,
-//     })
-//   }
-// }
+export async function isAdmin(request: FastifyRequest, reply: FastifyReply) {
+  const { id: authId } = request.user as { id: string }
+
+  const tokenUser = await prisma.user.findUnique({
+    where: {
+      id: authId,
+    },
+  })
+
+  const role = tokenUser?.role
+
+  if (role !== 'admin') {
+    return reply.send({
+      message: `The role '${role}' is not authorized to this action`,
+    })
+  }
+}

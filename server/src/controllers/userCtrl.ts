@@ -205,19 +205,7 @@ export const updateUser: RouteHandlerMethod = async (request, reply) => {
 export const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
   const { id } = request.params as UserParams
 
-  const { id: authId } = request.user as { id: string }
-
-  const tokenUser = await prisma.user.findUnique({
-    where: {
-      id: authId,
-    },
-  })
-
   try {
-    if (tokenUser?.role !== 'admin') {
-      return reply.send({ message: 'The authenticated user is not a admin.' })
-    }
-
     const block = await prisma.user.update({
       where: {
         id,
@@ -239,18 +227,7 @@ export const unblockUserHandler: RouteHandlerMethod = async (
 ) => {
   const { id } = request.params as UserParams
 
-  const { id: authId } = request.user as { id: string }
-
-  const tokenUser = await prisma.user.findUnique({
-    where: {
-      id: authId,
-    },
-  })
-
   try {
-    if (tokenUser?.role !== 'admin') {
-      return reply.send({ message: 'The authenticated user is not a admin.' })
-    }
     const unblock = await prisma.user.update({
       where: {
         id,
