@@ -202,7 +202,7 @@ export const updateUser: RouteHandlerMethod = async (request, reply) => {
   }
 }
 
-export const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
+export const blockUser: RouteHandlerMethod = async (request, reply) => {
   const { id } = request.params as UserParams
 
   try {
@@ -221,10 +221,7 @@ export const blockUserHandler: RouteHandlerMethod = async (request, reply) => {
   }
 }
 
-export const unblockUserHandler: RouteHandlerMethod = async (
-  request,
-  reply,
-) => {
+export const unblockUser: RouteHandlerMethod = async (request, reply) => {
   const { id } = request.params as UserParams
 
   try {

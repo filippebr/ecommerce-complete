@@ -1,13 +1,13 @@
 import { FastifyInstance } from 'fastify'
 
 import {
-  blockUserHandler,
+  blockUser,
   deleteUser,
   getUser,
   getUsers,
   loginUser,
   registerUser,
-  unblockUserHandler,
+  unblockUser,
   updateUser,
 } from '../controllers/userCtrl'
 import { authMiddleware, isAdmin } from '../middleware/authMiddleware'
@@ -42,11 +42,11 @@ export async function userRoutes(app: FastifyInstance) {
   app.put(
     '/block-user/:id',
     { preHandler: [authMiddleware, isAdmin] },
-    blockUserHandler,
+    blockUser,
   )
   app.put(
     '/unblock-user/:id',
     { preHandler: [authMiddleware, isAdmin] },
-    unblockUserHandler,
+    unblockUser,
   )
 }
