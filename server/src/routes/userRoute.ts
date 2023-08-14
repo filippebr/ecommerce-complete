@@ -6,6 +6,7 @@ import {
   getUser,
   getUsers,
   loginUser,
+  refreshToken,
   registerUser,
   unblockUser,
   updateUser,
@@ -35,6 +36,7 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.get('/:id', getUser)
   app.get('/all', getUsers)
+  app.get('/refresh', { preHandler: [authMiddleware, isAdmin] }, refreshToken)
   app.post('/register', registerUser)
   app.post('/login', loginUser)
   app.delete('/:id', deleteUser)

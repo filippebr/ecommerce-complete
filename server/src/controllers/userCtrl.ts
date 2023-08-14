@@ -162,6 +162,22 @@ export const loginUser: RouteHandlerMethod = async (
   }
 }
 
+export const refreshToken = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const cookie = request.cookies
+
+    console.log(cookie)
+
+    if (!cookie?.refreshToken)
+      return reply.send({ message: 'No refresh Token in cookie' })
+  } catch (error) {
+    return reply.send({ message: error })
+  }
+}
+
 export const deleteUser: RouteHandlerMethod = async (
   request: FastifyRequest,
   reply: FastifyReply,
