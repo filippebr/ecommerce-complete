@@ -115,7 +115,17 @@ export const loginUser: RouteHandlerMethod = async (
 
   const refreshToken = generateRefreshToken(user as UserParams)
 
-  console.log(refreshToken)
+  const updateUser = await prisma.user.update({
+    where: {
+      id: user?.id,
+    },
+    data: {
+      refreshToken,
+    },
+  })
+
+  console.log('user: ', user)
+  console.log('updateUser: ', updateUser)
 
   if (user?.password) {
     const match = BcryptService.comparePassword(
