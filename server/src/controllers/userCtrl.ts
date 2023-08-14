@@ -116,6 +116,11 @@ export const loginUser: RouteHandlerMethod = async (
 
     const refreshToken = generateRefreshToken(user as UserParams)
 
+    reply.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 72 * 60 * 60 * 1000,
+    })
+
     await prisma.user.update({
       where: {
         id: user?.id,
