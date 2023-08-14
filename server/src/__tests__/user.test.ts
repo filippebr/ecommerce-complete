@@ -181,7 +181,7 @@ describe('Authentication tests', () => {
         email: 'jose.doe@email.com',
         mobile: '9999999999',
         password: '12345678',
-        role: 'user',
+        role: 'admin',
         address: 'run jose doe, 111',
       })
 
@@ -220,7 +220,7 @@ describe('Authentication tests', () => {
         email: 'doe@email.com',
         mobile: '9999999997',
         password: '12345678',
-        role: 'user',
+        role: 'admin',
         address: 'rua jon do, 111',
       })
 
