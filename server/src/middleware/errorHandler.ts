@@ -17,8 +17,6 @@ export const errorHandler = (
     })
   }
 
-  // If the error is not of a known type, you can handle it accordingly
-  // For example, you can send a generic error response
   reply.status(500).send({
     success: false,
     error: 'Internal Server Error',

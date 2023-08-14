@@ -1,12 +1,24 @@
 import { FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
+import generateRefreshToken from '../config/refreshToken'
 import { prisma } from '../lib/prisma'
 import BcryptService from '../services/bcryptService'
 import userSchema from '../services/userSchema'
 
 interface UserParams {
   id: string
+  firstname: string
+  lastname: string
+  email: string
+  mobile: string
+  password: string
+  role: string
+  isBlocked: boolean
+  address: string | null
+  createdAt: Date
+  updatedAt: Date
+  refreshToken: string | null
 }
 
 export const getUser: RouteHandlerMethod = async (
@@ -100,6 +112,10 @@ export const loginUser: RouteHandlerMethod = async (
       email: userInfo.email,
     },
   })
+
+  const refreshToken = generateRefreshToken(user as UserParams)
+
+  console.log(refreshToken)
 
   if (user?.password) {
     const match = BcryptService.comparePassword(
