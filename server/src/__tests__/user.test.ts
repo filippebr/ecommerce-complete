@@ -97,13 +97,13 @@ describe('Authentication tests', () => {
 
   test('should not login a non-existing user', async () => {
     const response = await request(app.server).post('/api/user/login').send({
-      email: 'jane.doe@email.com',
+      email: 'jane@email.com',
       password: '12345678',
     })
 
     expect(response.status).toBe(409)
     expect(response.body).toHaveProperty('message')
-    expect(response.body.message).toBe('Email not found')
+    expect(response.body.message).toBe('Non-existing user')
   })
 
   test('should not login a user with invalid data', async () => {

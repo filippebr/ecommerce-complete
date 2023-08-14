@@ -107,48 +107,54 @@ export const loginUser: RouteHandlerMethod = async (
 
   const userInfo = userSchema.parse(request.body)
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: userInfo.email,
-    },
-  })
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: userInfo.email,
+      },
+    })
 
-  const refreshToken = generateRefreshToken(user as UserParams)
+    const refreshToken = generateRefreshToken(user as UserParams)
 
-  await prisma.user.update({
-    where: {
-      id: user?.id,
-    },
-    data: {
-      refreshToken,
-    },
-  })
+    await prisma.user.update({
+      where: {
+        id: user?.id,
+      },
+      data: {
+        refreshToken,
+      },
+    })
 
-  if (user?.password) {
-    const match = BcryptService.comparePassword(
-      userInfo.password,
-      user.password,
-    )
+    if (user?.password) {
+      const match = BcryptService.comparePassword(
+        userInfo.password,
+        user.password,
+      )
 
-    if (!match)
+      if (!match)
+        return reply
+          .code(409)
+          .send({ message: 'Invalid password', success: false })
+    }
+
+    if (!user)
       return reply
         .code(409)
-        .send({ message: 'Invalid password', success: false })
+        .send({ message: 'Email not found', success: false })
+
+    reply.send({
+      _id: user?.id,
+      firstname: user?.firstname,
+      lastname: user?.lastname,
+      email: user?.email,
+      mobile: user?.mobile,
+      createdAt: user?.createdAt,
+      updatedAt: user?.updatedAt,
+      token: generateJsonWebToken(user),
+    })
+  } catch (error) {
+    reply.code(409).send({ message: 'Non-existing user', success: false })
   }
-
-  if (!user)
-    return reply.code(409).send({ message: 'Email not found', success: false })
-
-  reply.send({
-    _id: user?.id,
-    firstname: user?.firstname,
-    lastname: user?.lastname,
-    email: user?.email,
-    mobile: user?.mobile,
-    createdAt: user?.createdAt,
-    updatedAt: user?.updatedAt,
-    token: generateJsonWebToken(user),
-  })
 }
 
 export const deleteUser: RouteHandlerMethod = async (
