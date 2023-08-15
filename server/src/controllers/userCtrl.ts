@@ -173,6 +173,16 @@ export const refreshToken = async (
 
     if (!cookie?.refreshToken)
       return reply.send({ message: 'No refresh Token in cookie' })
+
+    const refreshToken = cookie.refreshToken
+
+    const user = await prisma.user.findFirst({
+      where: {
+        refreshToken,
+      },
+    })
+
+    return reply.send({ user })
   } catch (error) {
     return reply.send({ message: error })
   }
