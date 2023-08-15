@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify'
+import jwt, { Secret } from 'jsonwebtoken'
 import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import generateRefreshToken from '../config/refreshToken'
@@ -169,8 +170,6 @@ export const refreshToken = async (
   try {
     const cookie = request.cookies
 
-    console.log(cookie)
-
     if (!cookie?.refreshToken)
       return reply.send({ message: 'No refresh Token in cookie' })
 
@@ -181,6 +180,23 @@ export const refreshToken = async (
         refreshToken,
       },
     })
+
+    if (!user)
+      return reply.send({
+        message: 'No refresh token present in db or not matched',
+      })
+
+    jwt.verify(
+      refreshToken,
+      process.env.JWT_SECRET as Secret,
+      (err: any, decoded: any): void => {
+        if (err || user.id !== decoded.id) {
+          reply.send({ message: 'Something wrong with refreshToken' })
+        }
+        const accessToken = generateJsonWebToken(user)
+        reply.send({ accessToken })
+      },
+    )
 
     return reply.send({ user })
   } catch (error) {
