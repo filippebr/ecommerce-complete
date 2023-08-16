@@ -182,7 +182,10 @@ export const logoutUser: RouteHandlerMethod = async (
     })
 
     if (!user) {
-      reply.setCookie('refreshToken', '')
+      reply.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true,
+      })
       return reply.send({ message: 'This user do not exist' })
     }
 
@@ -197,7 +200,10 @@ export const logoutUser: RouteHandlerMethod = async (
       },
     })
 
-    reply.setCookie('refreshToken', '')
+    reply.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+    })
 
     return reply.send({ message: 'Logout with success' })
   } catch (error) {
