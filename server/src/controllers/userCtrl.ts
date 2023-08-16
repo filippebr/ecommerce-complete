@@ -163,6 +163,48 @@ export const loginUser: RouteHandlerMethod = async (
   }
 }
 
+export const logoutUser: RouteHandlerMethod = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const cookie = request.cookies
+
+  try {
+    if (!cookie?.refreshToken)
+      return reply.send({ message: 'No Refresh Token in cookies' })
+
+    const refreshToken = cookie.refreshToken
+
+    const user = await prisma.user.findFirst({
+      where: {
+        refreshToken,
+      },
+    })
+
+    if (!user) {
+      reply.setCookie('refreshToken', '')
+      return reply.send({ message: 'This user do not exist' })
+    }
+
+    const id = user.id
+
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        refreshToken: '',
+      },
+    })
+
+    reply.setCookie('refreshToken', '')
+
+    return reply.send({ message: 'Logout with success' })
+  } catch (error) {
+    return reply.send({ message: error })
+  }
+}
+
 export const refreshToken = async (
   request: FastifyRequest,
   reply: FastifyReply,
