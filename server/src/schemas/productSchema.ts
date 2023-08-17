@@ -1,4 +1,5 @@
 import z from 'zod'
+import ratingSchema from './ratingSchema'
 
 const productSchema = z.object({
   title: z
@@ -41,7 +42,7 @@ const productSchema = z.object({
   images: z.array(z.string()),
   color: z.string().min(1),
   ratings: z.array(z.string()),
-  totalRatings: z.number().default(0),
+  totalRatings: z.number(ratingSchema).default(0),
 })
 
 export default productSchema

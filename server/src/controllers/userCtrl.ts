@@ -4,8 +4,8 @@ import { z } from 'zod'
 import generateJsonWebToken from '../config/jwtToken'
 import generateRefreshToken from '../config/refreshToken'
 import { prisma } from '../lib/prisma'
+import userSchema from '../schemas/userSchema'
 import BcryptService from '../services/bcryptService'
-import userSchema from '../services/userSchema'
 
 interface UserParams {
   id: string
