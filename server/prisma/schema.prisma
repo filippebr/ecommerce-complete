@@ -16,10 +16,10 @@ model User {
   password     String
   role         String    @default("user")
   isBlocked    Boolean   @default(false)
-  cart         Cart[]
   address      String?
-  wishlist     Product[]
   refreshToken String?
+  cart         Cart[]
+  wishlist     Product[]
   rating       Rating[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now())
@@ -63,7 +63,7 @@ model Admin {
 }
 
 model Rating {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   star      Int
   comment   String?
   product   Product? @relation(fields: [productId], references: [id])

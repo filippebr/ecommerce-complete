@@ -1,7 +1,5 @@
 import z from 'zod'
 
-const ratingSchema = z.object({
-  id: z.number(),
-})
+const ratingSchema = z.object({})
 
 export default ratingSchema

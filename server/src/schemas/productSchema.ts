@@ -39,10 +39,10 @@ const productSchema = z.object({
     .min(1),
   quantity: z.number(),
   sold: z.number().default(0),
-  images: z.array(z.string()),
+  images: z.string(),
   color: z.string().min(1),
-  ratings: z.array(z.string()),
-  totalRatings: z.number(ratingSchema).default(0),
+  rating: z.array(ratingSchema),
+  totalRatings: z.number().default(0),
 })
 
 export default productSchema
