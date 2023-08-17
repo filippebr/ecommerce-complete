@@ -3,6 +3,7 @@ import cookie from '@fastify/cookie'
 import jwt from '@fastify/jwt'
 import fastify, { FastifyRequest } from 'fastify'
 import { errorHandler } from './middleware/errorHandler'
+import { productRoutes } from './routes/productRoute'
 import { userRoutes } from './routes/userRoute'
 
 const server = fastify()
@@ -24,6 +25,7 @@ server.register(require('@fastify/csrf-protection'), {
 })
 
 server.register(userRoutes, { prefix: 'api/user' })
+server.register(productRoutes, { prefix: 'api/product' })
 
 const PORT = 3333
 
