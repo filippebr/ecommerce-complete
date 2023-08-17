@@ -19,15 +19,29 @@ model User {
   cart         Cart[]
   address      String?
   wishlist     Product[]
+  refreshToken String?
+  rating       Rating[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now())
-  refreshToken String?
 }
 
 model Product {
-  id     Int     @id @default(autoincrement())
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  id          String   @id @default(uuid())
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      String?
+  title       String
+  slug        String   @unique
+  description String
+  price       Float
+  category    String
+  brand       String
+  quantity    Int
+  sold        Int      @default(0)
+  images      String
+  color       String
+  rating      Rating[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
 model Cart {
@@ -46,4 +60,14 @@ model Admin {
   role      String   @default("admin")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  star      Int
+  comment   String?
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
