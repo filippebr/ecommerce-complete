@@ -23,7 +23,27 @@ export const createProduct: RouteHandlerMethod = async (
         color: productInfo.color,
       },
     })
+
     return reply.send({ message: newProduct })
+  } catch (error) {
+    return reply.send({ message: error })
+  }
+}
+
+export const getProduct: RouteHandlerMethod = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const { id } = request.params as { id: string }
+
+  try {
+    const findProduct = await prisma.product.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    reply.send({ findProduct })
   } catch (error) {
     return reply.send({ message: error })
   }
