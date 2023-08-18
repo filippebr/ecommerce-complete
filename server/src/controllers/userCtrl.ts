@@ -7,7 +7,7 @@ import { prisma } from '../lib/prisma'
 import userSchema from '../schemas/userSchema'
 import BcryptService from '../services/bcryptService'
 
-interface UserParams {
+type UserParams = {
   id: string
   firstname: string
   lastname: string
