@@ -25,23 +25,13 @@ const productSchema = z.object({
       invalid_type_error: 'Price must be a number',
     })
     .positive(),
-  category: z
-    .string({
-      required_error: 'Category is required',
-      invalid_type_error: 'Category must be a string',
-    })
-    .min(1),
-  brand: z
-    .string({
-      required_error: 'Brand is required',
-      invalid_type_error: 'Brand must be a string',
-    })
-    .min(1),
+  category: z.string().optional(),
+  brand: z.string().optional(),
   quantity: z.number(),
   sold: z.number().default(0),
-  images: z.string(),
-  color: z.string().min(1),
-  rating: z.array(ratingSchema),
+  images: z.string().optional(),
+  color: z.string().optional(),
+  rating: z.array(ratingSchema).optional(),
   totalRatings: z.number().default(0),
 })
 
