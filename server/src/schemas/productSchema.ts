@@ -25,12 +25,12 @@ const productSchema = z.object({
       invalid_type_error: 'Price must be a number',
     })
     .positive(),
-  category: z.string().optional(),
-  brand: z.string().optional(),
+  category: z.string().optional().default(''),
+  brand: z.string().optional().default('Apple'),
   quantity: z.number(),
   sold: z.number().default(0),
-  images: z.string().optional(),
-  color: z.string().optional(),
+  images: z.string().optional().default(''),
+  color: z.string().optional().default(''),
   rating: z.array(ratingSchema).optional(),
   totalRatings: z.number().default(0).optional(),
 })
