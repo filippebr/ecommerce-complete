@@ -52,3 +52,16 @@ export const getProduct: RouteHandlerMethod = async (
     return reply.send({ message: error })
   }
 }
+
+export const getAllProducts: RouteHandlerMethod = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const getAllProducts = await prisma.product.findMany()
+
+    return reply.send(getAllProducts)
+  } catch (error) {
+    return reply.send({ message: error })
+  }
+}
