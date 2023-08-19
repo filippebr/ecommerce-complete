@@ -8,5 +8,5 @@ import {
 export async function productRoutes(app: FastifyInstance) {
   app.post('/', createProduct)
   app.get('/:id', getProduct)
-  app.get('/products', getAllProducts)
+  app.get('/', getAllProducts)
 }
