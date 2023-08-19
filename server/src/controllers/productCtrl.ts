@@ -42,6 +42,26 @@ export const createProduct: RouteHandlerMethod = async (
   }
 }
 
+export const deleteProduct: RouteHandlerMethod = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as ProductParams
+
+    const deleteProduct = await prisma.product.delete({
+      where: { id },
+    })
+
+    return reply.send({
+      message: 'Product deleted with success',
+      deleteProduct,
+    })
+  } catch (error) {
+    return reply.send({ message: 'Product not found', success: false })
+  }
+}
+
 export const updateProduct: RouteHandlerMethod = async (
   request: FastifyRequest,
   reply: FastifyReply,
