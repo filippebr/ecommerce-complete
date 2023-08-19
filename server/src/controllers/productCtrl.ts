@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest, RouteHandlerMethod } from 'fastify'
+import slugify from 'slugify'
 import { prisma } from '../lib/prisma'
 import productSchema from '../schemas/productSchema'
 
-type UserParams = {
+type ProductParams = {
   id: string
 }
 
@@ -12,6 +13,10 @@ export const createProduct: RouteHandlerMethod = async (
 ) => {
   try {
     const productInfo = productSchema.parse(request.body)
+
+    if (productInfo.title) {
+      productInfo.slug = slugify(productInfo.title)
+    }
 
     const newProduct = await prisma.product.create({
       data: {
@@ -38,7 +43,7 @@ export const getProduct: RouteHandlerMethod = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-  const { id } = request.params as UserParams
+  const { id } = request.params as ProductParams
 
   try {
     const findProduct = await prisma.product.findUnique({

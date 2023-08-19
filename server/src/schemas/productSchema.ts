@@ -8,11 +8,7 @@ const productSchema = z.object({
       invalid_type_error: 'Title must be a string',
     })
     .min(1),
-  slug: z
-    .string({
-      required_error: 'Slug is required',
-    })
-    .min(1),
+  slug: z.string().optional(),
   description: z
     .string({
       required_error: 'Description is required',
