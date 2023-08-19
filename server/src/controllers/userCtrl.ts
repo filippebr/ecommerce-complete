@@ -167,9 +167,8 @@ export const logoutUser: RouteHandlerMethod = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-  const cookie = request.cookies
-
   try {
+    const cookie = request.cookies
     if (!cookie?.refreshToken)
       return reply.send({ message: 'No Refresh Token in cookies' })
 
@@ -272,9 +271,8 @@ export const deleteUser: RouteHandlerMethod = async (
 }
 
 export const updateUser: RouteHandlerMethod = async (request, reply) => {
-  const { id } = request.params as UserParams
-
   try {
+    const { id } = request.params as UserParams
     const userInfo = userSchema.parse(request.body)
 
     const user = await prisma.user.update({
@@ -298,9 +296,9 @@ export const updateUser: RouteHandlerMethod = async (request, reply) => {
 }
 
 export const blockUser: RouteHandlerMethod = async (request, reply) => {
-  const { id } = request.params as UserParams
-
   try {
+    const { id } = request.params as UserParams
+
     const block = await prisma.user.update({
       where: {
         id,
@@ -317,9 +315,9 @@ export const blockUser: RouteHandlerMethod = async (request, reply) => {
 }
 
 export const unblockUser: RouteHandlerMethod = async (request, reply) => {
-  const { id } = request.params as UserParams
-
   try {
+    const { id } = request.params as UserParams
+
     const unblock = await prisma.user.update({
       where: {
         id,
