@@ -53,8 +53,6 @@ export async function isAdmin(request: FastifyRequest, reply: FastifyReply) {
 
   const role = tokenUser?.role
 
-  console.log('role: ', role)
-
   if (role !== 'admin') {
     return reply.send({
       message: `The role '${role}' is not authorized to this action`,

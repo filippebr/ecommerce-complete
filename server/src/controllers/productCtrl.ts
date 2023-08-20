@@ -125,7 +125,23 @@ export const getAllProducts: RouteHandlerMethod = async (
   reply: FastifyReply,
 ) => {
   try {
-    const getAllProducts = await prisma.product.findMany()
+    const query = request.query as any
+    const brand = query.brand // Extract the 'brand' query parameter from the URL
+
+    console.log(brand)
+
+    if (!brand) {
+      // Handle the case where the 'brand' parameter is missing
+      return reply.status(400).send({ message: 'Brand parameter is missing' })
+    }
+
+    const getAllProducts = await prisma.product.findMany({
+      where: {
+        brand: {
+          equals: brand, // Use the extracted 'brand' parameter in the query
+        },
+      },
+    })
 
     return reply.send(getAllProducts)
   } catch (error) {
