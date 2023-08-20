@@ -6,11 +6,12 @@ import {
   getProduct,
   updateProduct,
 } from '../controllers/productCtrl'
+import { authMiddleware, isAdmin } from '../middleware/authMiddleware'
 
 export async function productRoutes(app: FastifyInstance) {
-  app.post('/', createProduct)
-  app.delete('/:id', deleteProduct)
-  app.put('/:id', updateProduct)
+  app.post('/', { preHandler: [authMiddleware, isAdmin] }, createProduct)
+  app.delete('/:id', { preHandler: [authMiddleware, isAdmin] }, deleteProduct)
+  app.put('/:id', { preHandler: [authMiddleware, isAdmin] }, updateProduct)
   app.get('/:id', getProduct)
   app.get('/', getAllProducts)
 }
