@@ -47,9 +47,9 @@ export const getUsers: RouteHandlerMethod = async (
 ) => {
   try {
     const users = await prisma.user.findMany()
-    reply.send({ users })
+    return reply.send({ users })
   } catch (error) {
-    reply.send(error)
+    return reply.send(error)
   }
 }
 

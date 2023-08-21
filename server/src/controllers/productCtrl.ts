@@ -125,28 +125,9 @@ export const getAllProducts: RouteHandlerMethod = async (
   reply: FastifyReply,
 ) => {
   try {
-    const queryObj = request.query as any
-    const filter = { ...queryObj }
-    const excludeFields = ['page', 'sort', 'limit', 'fields']
-    excludeFields.forEach((el) => delete queryObj[el])
+    const products = await prisma.product.findMany()
 
-    console.log('filter: ', filter)
-
-    let queryStr = JSON.stringify(queryObj)
-
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-
-    const products = await prisma.product.findMany({
-      where: JSON.parse(queryStr),
-    })
-
-    console.log('products: ', products)
-
-    // const getAllProducts = await prisma.product.findMany({
-    //   where: {},
-    // })
-
-    return reply.send(getAllProducts)
+    return reply.send({ products })
   } catch (error) {
     return reply.send({ message: error })
   }
