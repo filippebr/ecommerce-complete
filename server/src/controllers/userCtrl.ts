@@ -20,6 +20,9 @@ type UserParams = {
   createdAt: Date
   updatedAt: Date
   refreshToken: string | null
+  passwordResetToken: string | null
+  passwordResetExpires: Date | null
+  passwordChangeAt: Date | null
 }
 
 export const getUser: RouteHandlerMethod = async (
