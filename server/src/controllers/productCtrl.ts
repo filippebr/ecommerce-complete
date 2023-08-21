@@ -125,7 +125,12 @@ export const getAllProducts: RouteHandlerMethod = async (
   reply: FastifyReply,
 ) => {
   try {
-    const products = await prisma.product.findMany()
+    const products = await prisma.product.findMany({
+      take: 3,
+      orderBy: {
+        id: 'asc',
+      },
+    })
 
     return reply.send({ products })
   } catch (error) {
