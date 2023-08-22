@@ -335,3 +335,26 @@ export const unblockUser: RouteHandlerMethod = async (request, reply) => {
     return reply.send({ message: 'User not found', success: false })
   }
 }
+
+export const updatePassword: RouteHandlerMethod = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const { id } = request.user as UserParams
+
+  const password = request.body
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  if (password) {
+    return reply.send({
+      message: 'Password update with success',
+    })
+  } else {
+    return reply.send(user)
+  }
+}

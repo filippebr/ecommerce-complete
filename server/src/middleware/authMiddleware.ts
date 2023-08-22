@@ -45,6 +45,8 @@ export async function authMiddleware(
 export async function isAdmin(request: FastifyRequest, reply: FastifyReply) {
   const { id: authId } = request.user as { id: string }
 
+  console.log('request.user: ', request.user)
+
   const tokenUser = await prisma.user.findUnique({
     where: {
       id: authId,

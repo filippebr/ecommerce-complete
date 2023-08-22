@@ -10,6 +10,7 @@ import {
   refreshToken,
   registerUser,
   unblockUser,
+  updatePassword,
   updateUser,
 } from '../controllers/userCtrl'
 import { authMiddleware, isAdmin } from '../middleware/authMiddleware'
@@ -23,6 +24,11 @@ export async function userRoutes(app: FastifyInstance) {
   app.get('/logout', logoutUser)
   app.delete('/:id', deleteUser)
   app.put('/:id', updateUser)
+  app.put(
+    '/password/:id',
+    { preHandler: [authMiddleware, isAdmin] },
+    updatePassword,
+  )
   app.put(
     '/block-user/:id',
     { preHandler: [authMiddleware, isAdmin] },
